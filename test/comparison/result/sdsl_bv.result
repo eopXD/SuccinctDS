@@ -1,0 +1,42 @@
+[b04705001@linux5 comparison]$ make sdsl
+g++ -std=c++17 -O3 -Wall -I/tmp2/b04705001/include -L/tmp2/b04705001/lib  sdsl_bv.cpp -lsdsl -ldivsufsort -ldivsufsort64 -o test.sdsl_bv
+[b04705001@linux5 comparison]$ ./test.sdsl_bv
+bit vector size: 1.16415 G
+sparsity: 0.01
+create bit_vector(BV_SZ, 0): 0.946782 seconds
+init all 0: 6.49817 seconds
+sparsity cost: 19.4062 seconds
+sum: 34.7146 seconds
+sdsl::rrr_vector<15>: 37.587 seconds
+<15>::rank_1_type: 1e-06 seconds
+access() 100000000 times, 26.3428 seconds
+access() 200000000 times, 51.7332 seconds
+access() 400000000 times, 105.318 seconds
+access() 800000000 times, 215.323 seconds
+rank(): 100000000 times, 37.7385 seconds
+rank(): 200000000 times, 75.1629 seconds
+rank(): 400000000 times, 162.457 seconds
+rank(): 800000000 times, 306.403 seconds
+total time: 1079.63 seconds
+
+
+[b04705001@linux5 comparison]$ make sdsl
+g++ -std=c++17 -O3 -Wall -I/tmp2/b04705001/include -L/tmp2/b04705001/lib  sdsl_bv.cpp -lsdsl -ldivsufsort -ldivsufsort64 -o test.sdsl_bv
+[b04705001@linux5 comparison]$ ./test.sdsl_bv
+bit vector size: 1.16415 G
+sparsity: 0.01
+create bit_vector(BV_SZ, 0): 0.995906 seconds
+init all 0: 5.865 seconds
+sparsity cost: 16.6525 seconds
+sum: 29.6109 seconds
+sdsl::rrr_vector<63>: 11.9815 seconds
+<63>::rank_1_type: 1.3e-05 seconds
+access() 100000000 times, 53.8254 seconds
+access() 200000000 times, 104.854 seconds
+access() 400000000 times, 219.478 seconds
+access() 800000000 times, 440.612 seconds
+rank(): 100000000 times, 67.9364 seconds
+rank(): 200000000 times, 151.004 seconds
+rank(): 400000000 times, 262.063 seconds
+rank(): 800000000 times, 535.298 seconds
+total time: 1900.18 seconds

@@ -1,0 +1,19 @@
+[b04705001@linux5 comparison]$ make suc
+g++ -std=c++17 -O3 -Wall -I../.. suc_bv.cpp -o test.suc_bv
+[b04705001@linux5 comparison]$ ./test.suc_bv
+eopxd::bv_lookup: 6e-05 seconds
+bit vector size: 1.16415 G
+sparsity: 0.01
+init all 0: 11.9613 seconds
+sparsity: 16.7633 seconds
+sum: 30.8656 seconds
+support_rank(): 21.481 seconds
+access(): 100000000 times, 26.5677 seconds
+access(): 200000000 times, 40.9602 seconds
+access(): 400000000 times, 78.5998 seconds
+access(): 800000000 times, 159.596 seconds
+rank(): 100000000 times, 51.2577 seconds
+rank(): 200000000 times, 77.1612 seconds
+rank(): 400000000 times, 154.848 seconds
+rank(): 800000000 times, 315.236 seconds
+total time: 985.298 seconds
