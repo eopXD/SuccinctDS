@@ -8,7 +8,6 @@ Written by Yueh-Ting Chen (eopXD)
 
 I am taking version 2.1.1 for testing (`sdsl/`)
 
-
 ## Source Code
 
 ![](flow.png)
@@ -22,6 +21,7 @@ I am taking version 2.1.1 for testing (`sdsl/`)
 
 - `include/wt.hpp`: main wavelet tree structure, and rank/select/access operations
 - `include/bv.hpp`: include bitvector implementations inside `bv/`
+- `include/util.hpp`:  utility functions
 
 ### Constructors
 
