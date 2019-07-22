@@ -1,8 +1,8 @@
 sdsl version 2.1.1
 
-## bit vector
+# bit vector
 
-I am comparing between my rrr lookup table bit vector (support rank) with the rrr vector of sdsl library. The results are shown in `*.result`. Comparing the 2 implementations, with the same blocksize both rrr vectors show similar result.
+I am comparing my rrr bit vector (support rank) with the ones of sdsl library. The results are shown in `*.result`. Comparing the 2 implementations, with the same blocksize both rrr vectors show similar result.
 
 sdsl supports bigger block size, which is a tradeoff between time and space. it shows that with bigger blocksize the time of access/rank also increases linearly (while the initialization time is x2 faster)
 
@@ -11,6 +11,21 @@ sdsl supports bigger block size, which is a tradeoff between time and space. it 
 | self-implemented RRR | sdsl RRR<15> | sdsl RRR<63> |
 |----------------------|--------------|--------------|
 | 21.481               | 37.587       | 11.9815      |
+
+## assertion
+
+assertions are added to confirm the correctness of functionality of the bit vector.
+
+### self implemented
+
+![](img/self assert access.png)
+![](img/self assert rank.png)
+
+### sdsl
+
+![](img/sdsl assert access.png)
+![](img/sdsl assert rank.png)
+
 
 ## access() operation
 
