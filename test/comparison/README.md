@@ -29,7 +29,7 @@ assertions are added to confirm the correctness of functionality of the bit vect
 
 ## access() operation
 
-| access time | self RRR<15> | sdsl RRR<15> | sdsl RRR<63> |
+| # of access | self RRR<15> | sdsl RRR<15> | sdsl RRR<63> |
 |-------------|----------------------|--------------|--------------|
 | 100000000   | 26.5677              | 26.3428      | 53.8254      |
 | 200000000   | 40.9602              | 51.7332      | 104.854      |
@@ -40,7 +40,7 @@ assertions are added to confirm the correctness of functionality of the bit vect
 
 ## rank() operation
 
-| rank time | self RRR<15> | sdsl RRR<15> | sdsl RRR<63> |
+| # of rank   | self RRR<15> | sdsl RRR<15> | sdsl RRR<63> |
 |-------------|----------------------|--------------|--------------|
 | 100000000   | 51.2577              | 37.7385      | 67.9364      |
 | 200000000   | 77.1612              | 75.1629      | 151.004      |
