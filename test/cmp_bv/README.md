@@ -18,13 +18,13 @@ assertions are added to confirm the correctness of functionality of the bit vect
 
 ### self implemented
 
-![](https://raw.githubusercontent.com/eopXD/SuccinctDS/master/test/comparison/img/self%20assert%20access.png?token=ACE22Y2I7TZ2N7SHAWV4SBC5H4UI2)
-![](https://raw.githubusercontent.com/eopXD/SuccinctDS/master/test/comparison/img/sdsl%20assert%20rank.png?token=ACE22Y6SDVH2PPAPVTDEZBS5H4ULU)
+![](self assert access.png)
+![](self assert rank.png)
 
 ### sdsl
 
-![](https://raw.githubusercontent.com/eopXD/SuccinctDS/master/test/comparison/img/sdsl%20assert%20access.png?token=ACE22Y3ZNGARUMFOWDXAUJC5H4UOC)
-![](https://raw.githubusercontent.com/eopXD/SuccinctDS/master/test/comparison/img/self%20assert%20rank.png?token=ACE22YYYS7IWR2H2J4CEUKK5H4UQO)
+![](sdsl assert access.png)
+![](sdsl assert rank.png)
 
 
 ## access() operation
@@ -36,7 +36,7 @@ assertions are added to confirm the correctness of functionality of the bit vect
 | 400000000   | 78.5998              | 105.318      | 219.478      |
 | 800000000   | 159.596              | 215.323      | 440.612      |
 
-![](https://raw.githubusercontent.com/eopXD/SuccinctDS/master/test/comparison/img/access%20operation.png?token=ACE22Y47EBMUGXH7VENWVZS5H4UVM)
+![](access operation.png)
 
 ## rank() operation
 
@@ -47,4 +47,5 @@ assertions are added to confirm the correctness of functionality of the bit vect
 | 400000000   | 154.828              | 162.457      | 262.063      |
 | 800000000   | 315.236              | 306.403      | 535.298      |
 
-![](https://raw.githubusercontent.com/eopXD/SuccinctDS/master/test/comparison/img/rank%20operation.png?token=ACE22Y3GO76GBK3BFBEPXUS5H4UW4)
+![](rank operation.png)
+
