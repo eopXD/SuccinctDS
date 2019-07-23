@@ -62,13 +62,17 @@ struct wt_huff {
 		INT buf_size = bpa * 1024;
 		char *buf = new char [buf_size];
 		STR blk;
-		while ( file->read(buf, buf_size) ) {
-			INT extracted = file->gcount();	
+		while ( 1 ) {
+			file->read(buf, buf_size);
+			INT extracted = file->gcount();
+			if ( extracted == 0 ) {
+				break;
+			}
 			for ( INT i=0; i<extracted; ++i ) {
 				blk += buf[i];
 				if ( blk.size() == bpa ) {
 					if ( alphabet.count(blk) == 0 ) {
-						std::cout << "get block: " << blk << "\n";
+						//std::cout << "get block: " << blk << "\n";
 						INT idx = alphabet.size();
 						alphabet[blk] = idx;
 						freq.push_back(make_pair(0, blk));
@@ -106,8 +110,9 @@ struct wt_huff {
 		while ( vec.size() > 1 ) {
 			std::sort(vec.begin(), vec.end(), cmp);
 			//for ( typename VNODE::iterator it=vec.begin();
-			//	it!=vec.end(); ++it ) 
-			//	it->display_bitmap();
+			//	it!=vec.end(); ++it ) {
+			//	it->display_bitmap(); }
+
 			NODE *a = vec[vec.size()-2], *b = vec[vec.size()-1];
 			vec.pop_back(); vec.pop_back();
 			NODE *c = new NODE(a, b);
@@ -154,8 +159,12 @@ struct wt_huff {
 		INT buf_size = bpa * 1024;
 		char *buf = new char [buf_size];
 		STR blk;
-		while ( file->read(buf, buf_size) ) {
-			INT extracted = file->gcount();	
+		while ( 1 ) {
+			file->read(buf, buf_size);
+			INT extracted = file->gcount();
+			if ( extracted == 0 ) {
+				break;
+			}
 			for ( INT i=0; i<extracted; ++i ) {
 				blk += buf[i];
 				if ( blk.size() == bpa ) {

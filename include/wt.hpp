@@ -7,7 +7,7 @@
 
 
 //*******************************	
-//** TODO: SUPPORT STREAM MODE **
+//** DONE: SUPPORT STREAM MODE **
 //*******************************
 /*
 stream mode: spend one time to read through it to investigate
@@ -101,11 +101,11 @@ struct wt {
 	INT rank ( STR c, INT p ) {
 		if ( !rank_support ) {
 			std::cout << "call support_rank() for rank ops\n";
-			return (-1);
+			return (0);
 		}
 		if ( tree->huffcode.find(c) == tree->huffcode.end() ) {
 			std::cout << "this alphabet does not belong to exist\n";
-			return (-1);
+			return (0);
 		}
 		return (_rank(root, tree->huffcode[c], p, 0));
 	}
@@ -148,15 +148,15 @@ struct wt {
 	INT select ( STR c, INT o ) {
 		if ( o < 0 ) {
 			std::cout << "o >= 0 required\n";
-			return (-1);
+			return (0);
 		}
 		if ( !select_support ) {
 			std::cout << "call support_select() for select ops.\n";
-			return (-1);
+			return (0);
 		}
 		if ( tree->huffcode.find(c) == tree->huffcode.end() ) {
 			std::cout << "this alphabet does not belong to exist\n";
-			return (-1);
+			return (0);
 		}
 		return (_select(root, tree->huffcode[c], o));
 	}
