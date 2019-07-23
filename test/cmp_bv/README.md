@@ -18,13 +18,13 @@ assertions are added to confirm the correctness of functionality of the bit vect
 
 ### self implemented
 
-![](self assert access.png)
-![](self assert rank.png)
+![](self_assert_access.png)
+![](self_assert_rank.png)
 
 ### sdsl
 
-![](sdsl assert access.png)
-![](sdsl assert rank.png)
+![](sdsl_assert_access.png)
+![](sdsl_assert_rank.png)
 
 
 ## access() operation
@@ -36,7 +36,7 @@ assertions are added to confirm the correctness of functionality of the bit vect
 | 400000000   | 78.5998              | 105.318      | 219.478      |
 | 800000000   | 159.596              | 215.323      | 440.612      |
 
-![](access operation.png)
+![](access _op.png)
 
 ## rank() operation
 
@@ -47,5 +47,5 @@ assertions are added to confirm the correctness of functionality of the bit vect
 | 400000000   | 154.828              | 162.457      | 262.063      |
 | 800000000   | 315.236              | 306.403      | 535.298      |
 
-![](rank operation.png)
+![](rank_op.png)
 
