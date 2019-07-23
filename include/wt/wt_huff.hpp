@@ -64,7 +64,7 @@ struct wt_huff {
 		STR blk;
 		while ( file->read(buf, buf_size) ) {
 			INT extracted = file->gcount();	
-			for ( int i=0; i<extracted; ++i ) {
+			for ( INT i=0; i<extracted; ++i ) {
 				blk += buf[i];
 				if ( blk.size() == bpa ) {
 					if ( alphabet.count(blk) == 0 ) {
@@ -156,7 +156,7 @@ struct wt_huff {
 		STR blk;
 		while ( file->read(buf, buf_size) ) {
 			INT extracted = file->gcount();	
-			for ( int i=0; i<extracted; ++i ) {
+			for ( INT i=0; i<extracted; ++i ) {
 				blk += buf[i];
 				if ( blk.size() == bpa ) {
 					STR code = huffcode[blk];
