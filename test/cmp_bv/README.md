@@ -36,7 +36,7 @@ assertions are added to confirm the correctness of functionality of the bit vect
 | 400000000   | 78.5998              | 105.318      | 219.478      |
 | 800000000   | 159.596              | 215.323      | 440.612      |
 
-![](access _op.png)
+![](access_op.png)
 
 ## rank() operation
 
