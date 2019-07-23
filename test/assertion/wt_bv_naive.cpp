@@ -6,6 +6,7 @@
 */
 
 #include <cstdio>
+#include <stdint.h>
 #include <cassert>
 #include <random>
 #include <iostream>
@@ -13,9 +14,10 @@
 
 #include "include/wt.hpp"
 
-int naive_rank ( std::string s, int pos, std::string c, int bpa ) {
-	int res = 0;
-	for ( int i=0; i+bpa<=pos; i+=bpa ) {
+typedef uint64_t INT;
+INT naive_rank ( std::string s, INT pos, std::string c, int bpa ) {
+	INT res = 0;
+	for ( INT i=0; i+bpa<=pos; i+=bpa ) {
 		std::string x = s.substr(i, bpa);
 		if ( x == c ) {
 			++res;
@@ -24,12 +26,12 @@ int naive_rank ( std::string s, int pos, std::string c, int bpa ) {
 	return (res);
 }
 // 0th occurence is the first occurence
-int naive_select ( std::string s, int n, int occ, std::string c, int bpa ) {
+INT naive_select ( std::string s, INT n, INT occ, std::string c, int bpa ) {
 	if ( occ < 0 ) {
 		return (-1);
 	}
-	int cnt = 0;
-	for ( int i=0; i<n; i+=bpa ) {
+	INT cnt = 0;
+	for ( INT i=0; i<n; i+=bpa ) {
 		std::string x = s.substr(i, bpa);
 		cnt += (x == c);
 		if ( (cnt-1) == occ ) {
@@ -51,7 +53,7 @@ implementation.\nThe wavelet tree is also Huffman-shaped because it compresses\
 be done to the bitstring, which is left as a possible future work.\nThank you\
  for your attention.\n";
 
- 	int n = str.size();
+ 	INT n = str.size();
  	int bpa = 1;
 
  	wt<wt_huff<bv_naive>, bv_naive> *wt_ptr = 
@@ -63,20 +65,21 @@ be done to the bitstring, which is left as a possible future work.\nThank you\
  	wt_var.support_rank();
  	wt_var.support_select();
 
-	for ( int i=0; i<n; ++i ) {
+	for ( INT i=0; i<n; ++i ) {
 		std::string res = wt_ptr->access(i), res1 = wt_var.access(i);
 		assert(res[0] == str[i]);
 		assert(res1[0] == str[i]);
 	}
 
 	std::string vowel = "aeiou";
-	for ( int pos=0; pos<n; ++pos ) {
-		for ( int j=0; j<vowel.size(); ++j ) {
+	INT v_sz = vowel.size();
+	for ( INT pos=0; pos<n; ++pos ) {
+		for ( INT j=0; j<v_sz; ++j ) {
 			std::string c = vowel.substr(j,1);
-			int r = wt_ptr->rank(c, pos), r1 = wt_var.rank(c, pos);
-			for ( int k=0; k<10; ++k ) {
-				int occ = (pos==0) ? 0 : rand()%pos;
-				int s = wt_ptr->select(c, occ), s1 = wt_var.select(c, occ);
+			INT r = wt_ptr->rank(c, pos), r1 = wt_var.rank(c, pos);
+			for ( INT k=0; k<10; ++k ) {
+				INT occ = (pos==0) ? 0 : rand()%pos;
+				INT s = wt_ptr->select(c, occ), s1 = wt_var.select(c, occ);
 				assert(s == naive_select(str, n, occ, c, bpa));
 				assert(s1 == naive_select(str, n, occ, c, bpa));
 			}

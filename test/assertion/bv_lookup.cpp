@@ -6,6 +6,7 @@
 */
 
 #include <cstdio>
+#include <stdint.h>
 #include <cassert>
 #include <random>
 #include <iostream>
@@ -13,7 +14,9 @@
 #include "include/bv.hpp"
 
 using namespace eopxd;
-int naive_rank ( bool *ans, int pos, int c ) {
+typedef uint64_t INT;
+
+INT naive_rank ( bool *ans, int pos, int c ) {
     int res = 0;
     for ( int i=0; i<pos; ++i ) {
         if ( ans[i]==c ) {
