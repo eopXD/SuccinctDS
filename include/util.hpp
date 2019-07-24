@@ -5,22 +5,19 @@
 	\project with Professor Tsan-sheng Hsu
 */
 
+#ifndef EOPXD_UTIL_HPP
+#define EOPXD_UTIL_HPP
 
 #include <ctime>
 #include <cmath>
-#include <string>
-#include <fstream>
 
-std::streamsize get_size ( std::string filename ) {
-	std::ifstream file(filename, std::ios::binary | std::ios::ate);
-	return (file.tellg());
-}
-
-std::ifstream* start_stream( std::string filename ) {
-	return (new std::ifstream(filename, std::ios::binary));
-}
+namespace eopxd {
 
 double spent_time ( clock_t stamp ) {
 	clock_t cost = clock() - stamp;
 	return ((double)cost/CLOCKS_PER_SEC);
 }
+
+
+} // end namespace
+#endif
