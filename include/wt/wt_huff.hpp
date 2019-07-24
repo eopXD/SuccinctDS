@@ -8,14 +8,27 @@
 	\project with Professor Tsan-sheng Hsu
 */
 
+//*******************************	
+//** TODO: SIZE CALCULATION    **
+//*******************************
+//calculation of the data structure is neccessary
+
+//*******************************	
+//** TODO: PEAK MEMORTY USAGE  **
+//*******************************
+// peak of memory usage is also needed to 
+
 #ifndef EOPXD_WAVELET_HUFFMAN_HPP
 #define EOPXD_WAVELET_HUFFMAN_HPP
 
 // C99
+#include <unistd.h>
+#include <fcntl.h>
+#include <cstdio>
 #include <stdint.h>
+#include <ctime>
 // C++
 #include <iostream>
-#include <fstream>
 #include <utility>
 #include <string>
 #include <vector>
@@ -54,21 +67,19 @@ struct wt_huff {
 	VNODE vec; // sort it up, merge it up!!!
 	NODE *root; // root of tree
 
-	// also allocates space for bitmap (rank/select not built)
-	
 	// stream mode
-	void get_freq ( STR filename, std::streamsize size ) {
-		std::ifstream *file = start_stream(filename);
-		INT buf_size = bpa * 1024;
+	void get_freq ( char filename[]  ) {
+		int fd = open(filename, O_RDONLY);
+		if ( fd < 0 ) {
+			std::cout << "get_freq: fail to open\n";
+			return ;
+		}
+		
+		INT buf_size = bpa*65536, sz;
 		char *buf = new char [buf_size];
 		STR blk;
-		while ( 1 ) {
-			file->read(buf, buf_size);
-			INT extracted = file->gcount();
-			if ( extracted == 0 ) {
-				break;
-			}
-			for ( INT i=0; i<extracted; ++i ) {
+		while ( (sz=read(fd, buf, buf_size)) > 0 ) {
+			for ( INT i=0; i<sz; ++i ) {
 				blk += buf[i];
 				if ( blk.size() == bpa ) {
 					if ( alphabet.count(blk) == 0 ) {
@@ -82,6 +93,7 @@ struct wt_huff {
 				}
 			}
 		}	
+		close(fd);
 	}
 	// batch mode
 	void get_freq ( STR &data ) {
@@ -154,18 +166,17 @@ struct wt_huff {
 			fill_bit(now->right, str, lv+1);
 		}
 	}
-	void fill_data ( STR filename, std::streamsize size ) {
-		std::ifstream *file = start_stream(filename);
-		INT buf_size = bpa * 1024;
+	void fill_data ( char filename[] ) {
+		int fd = open(filename, O_RDONLY);
+		if ( fd < 0 ) {
+			std::cout << "fill_data: fail to open\n";
+			return ;
+		}
+		INT buf_size = bpa * 65536, sz;
 		char *buf = new char [buf_size];
 		STR blk;
-		while ( 1 ) {
-			file->read(buf, buf_size);
-			INT extracted = file->gcount();
-			if ( extracted == 0 ) {
-				break;
-			}
-			for ( INT i=0; i<extracted; ++i ) {
+		while ( (sz=read(fd, buf, buf_size)) > 0 ) {
+			for ( INT i=0; i<sz; ++i ) {
 				blk += buf[i];
 				if ( blk.size() == bpa ) {
 					STR code = huffcode[blk];
@@ -173,7 +184,8 @@ struct wt_huff {
 					blk.clear();
 				}
 			}
-		}		
+		}	
+		close(fd);
 	}
 	void fill_data ( STR &data ) {
 		STR blk;
@@ -201,13 +213,24 @@ struct wt_huff {
 		fill_data(data);
 	}
 	// stream mode constructor
-	wt_huff ( STR filename, std::streamsize size, INT _bpa ) {
-		std::cout << "[wt_huff] stream mode constructor acctivated\n";
+	wt_huff ( char filename[], INT _bpa, bool stream ) {
+		std::cout << "[wt_huff] stream mode constructor activated\n";
 		bpa = _bpa;
-		get_freq(filename, size);
+		clock_t start = clock(), stamp = clock();	
+		get_freq(filename);
+		std::cout << "get_freq: " << spent_time(stamp) << " seconds\n";
+		stamp = clock();
 		construct_tree();
+		std::cout << "construct_tree: " << spent_time(stamp) << " seconds\n";
+		stamp = clock();	
 		gen_code();
-		fill_data(filename, size);
+		std::cout << "gen_code: " << spent_time(stamp) << " seconds\n";
+		stamp = clock();
+		fill_data(filename);
+		std::cout << "fill_data: " << spent_time(stamp) << " seconds\n";
+		stamp = clock();
+		std::cout << "total: " << spent_time(start) << " seconds\n";
+
 	}
 
 }; // end struct wt_huff

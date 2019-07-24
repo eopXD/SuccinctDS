@@ -17,6 +17,17 @@ bitstrings in stream mode.
 this feature is needed if the data cannot fit into memory.
 */
 
+
+//*******************************	
+//** TODO: SIZE CALCULATION    **
+//*******************************
+//calculation of the data structure is neccessary
+
+//*******************************	
+//** TODO: PEAK MEMORTY USAGE  **
+//*******************************
+// peak of memory usage is also needed to 
+
 #ifndef EOPXD_WAVELET_HPP
 #define EOPXD_WAVELET_HPP
 
@@ -42,29 +53,32 @@ struct wt {
 	typedef wt_type WT_T;
 	typedef bitvector_type BV;
 	typedef wt_node<BV> NODE;
-	
+
 	WT_T *tree;
 	NODE *root;
 
 	bool rank_support, select_support;
 
 	wt () {
-		std::cout << "[wt] give me data lah🤦\n";
+		std::cout << "[wt] give me data lah ~~~\n";
 		exit(1);
 	}
-
+	// batch mode constructor
 	wt ( STR data, INT bpa ) { // bpa = bytes per alphabet
 		std::cout << "[wt] batch mode\n";
 		tree = new WT_T(data, bpa);
 		root = tree->root;
 		rank_support = select_support = false;
 	}
-	wt ( STR filename, std::streamsize size, INT bpa ) {
+	// stream mode constructor (last argument is dummy variable)
+	wt ( char filename[], INT bpa, bool stream ) {
 		std::cout << "[wt] stream mode\n";
-		tree = new WT_T(filename, size, bpa);
+		tree = new WT_T(filename, bpa, stream);
 		root = tree->root;
 		rank_support = select_support = false;
 	}
+
+/* Check if the node is a leaf node (only leaf nodes)*/
 	bool isLeaf ( NODE *now ) { 
 		return (now->left == nullptr and now->right == nullptr); 
 	}
