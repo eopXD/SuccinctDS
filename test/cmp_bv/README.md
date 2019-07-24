@@ -6,6 +6,10 @@ I am comparing my rrr bit vector (support rank) with the ones of sdsl library. T
 
 sdsl supports bigger block size, which is a tradeoff between time and space. it shows that with bigger blocksize the time of access/rank also increases linearly (while the initialization time is x2 faster)
 
+## testing file
+
+With random seed `112358`, I generated a random bitstring of length `1e10` (\~1.1G).
+
 ## inital compression (seconds)
 
 | self-implemented RRR | sdsl RRR<15> | sdsl RRR<63> |
