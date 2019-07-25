@@ -6,22 +6,37 @@
 */
 
 #include <cstdio>
+#include <cstring>
 #include <stdint.h>
 #include <cassert>
 #include <random>
 #include <iostream>
-#include <string>
 
 #include "include/wt.hpp"
 
 typedef uint64_t INT;
 
-int naive_rank ( std::string s, int pos, std::string c, int bpa ) {
-	int res = 0;
-	for ( int i=0; i+bpa<=pos; i+=bpa ) {
-		std::string x = s.substr(i, bpa);
-		if ( x == c ) {
-			++res;
+char str[1000] = "Hi everyone, welcome to the succinct wavelet tree \
+library! I am eopXD.\nThis library seeks for compression of data will \
+maintaining well accessibility, and received help from Professor Tsan-sheng\
+Hsu.\nI am a test string and will be encoded into the wavelet tree.\nIt can \
+be accessed by rank/select/access using the underlying bitvector \
+implementation.\nThe wavelet tree is also Huffman-shaped because it compresses \
+the input string data into zero-th order entropy.\nFurther compression can \
+be done to the bitstring, which is left as a possible future work.\nThank you \
+for your attention.\n";
+
+INT naive_rank ( int blk_hash, INT pos, int bpa ) {
+	INT res = 0;
+	int tmp_hash = 0, len = 0;
+	for ( INT i=0; i<pos; ++i ) {
+		++len;
+		tmp_hash = (tmp_hash<<8)+str[i];
+		if ( len == bpa ) {
+			if ( tmp_hash == blk_hash ) {
+				++res;
+			}
+			tmp_hash = len = 0;
 		}
 	}
 	return (res);
@@ -29,48 +44,35 @@ int naive_rank ( std::string s, int pos, std::string c, int bpa ) {
 using namespace eopxd;
 int main ()
 {
-	std::string str = "Hi everyone, welcome to the succinct wavelet tree \
-library! I am eopXD. This library seeks for compression of data will \
-maintaining well accessibility, and received help from Professor Tsan-sheng\
-Hsu. I am a test string and will be encoded into the wavelet tree. It can\
- be accessed by rank/select/access using the underlying bitvector \
-implementation. The wavelet tree is also Huffman-shaped because it compresses\
- the input string data into zero-th order entropy. Further compression can \
-be done to the bitstring, which is left as a possible future work. Thank you\
- for your attention.";
-
- 	INT n = str.size();
+ 	INT n = strlen(str);
  	int bpa = 1;
- 	std::string vowel = "aeiou";
- 	INT v_sz = vowel.size();
  	wt<wt_huff<bv_lookup>, bv_lookup> *wt_ptr = 
- 		new wt<wt_huff<bv_lookup>, bv_lookup>(str, bpa);
- 	wt_ptr->support_rank();
+ 		new wt<wt_huff<bv_lookup>, bv_lookup>(str, n, bpa);
+ 	wt<wt_huff<bv_lookup>, bv_lookup> wt_var(str, n, bpa);
+
+	wt_ptr->support_rank();
+	wt_var.support_rank();
+
+	for ( INT i=0; i<n; ++i ) {
+		char *a0 = wt_ptr->access(i);
+		char *a1 = wt_var.access(i);
+		assert(a0[0] == str[i]);
+		assert(a1[0] == str[i]);
+	}
+	std::cout << "pass access assertion\n";
+
+	std::string vowel = "aeiou";
+ 	INT v_sz = vowel.size();
  	for ( INT pos=0; pos<n; pos+=bpa ) {
  		for ( INT j=0; j<v_sz; ++j ) {
- 			std::string c = vowel.substr(j, 1);
- 			INT r = wt_ptr->rank(c, pos);
- 			INT r1 = naive_rank(str, pos, c, bpa);
- 			if ( r != r1 ) {
- 				std::cout << "error on rank " << pos << "\n";
-// 				std::cout << pos << ": " << r << " " << r1 << " QAQ\n";
-// 				return (1);
- 			}
-			assert(r == r1);
+ 			int blk_hash = vowel[j];
+ 			INT r0 = wt_ptr->rank(blk_hash, pos);
+			INT r1 = wt_var.rank(blk_hash, pos);
+			assert(r0 == naive_rank(blk_hash, pos, bpa));
+			assert(r1 == naive_rank(blk_hash, pos, bpa));
  		}
- 		std::string c = wt_ptr->access(pos);
- 		std::string c1 = str.substr(pos, bpa);
-// 		std::cout << pos << ": " << c << " " << c1 << "\n";
-// 		std::cout << c;
- 		if ( c != c1 ) {
- 			std::cout << "error on access " << pos << "\n";
-// 			std::cout << n << "\n";
-//			std::cout << pos << ": " << c << " " << c1 << " QAQ\n";
-//			return (1);
- 		}
-		assert(c == c1);
  	}
- 	std::cout << "\n";
+	std::cout << "pass rank assertion\n";
  	exit(0);
 }
 /*
