@@ -18,6 +18,5 @@ double spent_time ( clock_t stamp ) {
 	return ((double)cost/CLOCKS_PER_SEC);
 }
 
-
 } // end namespace
 #endif

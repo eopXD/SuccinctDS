@@ -35,7 +35,6 @@ this feature is needed if the data cannot fit into memory.
 #include <stdint.h>
 // C++
 #include <iostream>
-#include <fstream>
 // eopXD
 #include "util.hpp"
 #include "bv.hpp"
@@ -48,7 +47,6 @@ namespace eopxd {
 template<class wt_type, class bitvector_type>
 struct wt {
 	typedef uint64_t INT;
-	typedef std::string STR;
 
 	typedef wt_type WT_T;
 	typedef bitvector_type BV;
@@ -64,75 +62,67 @@ struct wt {
 		exit(1);
 	}
 	// batch mode constructor
-	wt ( STR data, INT bpa ) { // bpa = bytes per alphabet
+	wt ( char *data, INT data_len, INT bpa ) { // bpa = bytes per alphabet
 		std::cout << "[wt] batch mode\n";
-		tree = new WT_T(data, bpa);
+		tree = new WT_T(data, data_len, bpa);
 		root = tree->root;
 		rank_support = select_support = false;
 	}
 	// stream mode constructor (last argument is dummy variable)
-	wt ( char filename[], INT bpa, bool stream ) {
+	wt ( char filename[], int name_len, INT bpa, bool dummy ) {
 		std::cout << "[wt] stream mode\n";
-		tree = new WT_T(filename, bpa, stream);
+		tree = new WT_T(filename, name_len, bpa, dummy);
 		root = tree->root;
 		rank_support = select_support = false;
 	}
 
 /* Check if the node is a leaf node (only leaf nodes)*/
 	bool isLeaf ( NODE *now ) { 
-		return (now->left == nullptr and now->right == nullptr); 
+		return (now->child[0] == nullptr and now->child[1] == nullptr); 
 	}
 
 /* Access: access the alphabet on position p */
-	STR _access ( NODE *now, INT p ) {
-		if ( isLeaf(now) ) return (now->leaf);
+	char* _access ( NODE *now, INT p ) {
+		if ( isLeaf(now) ) {
+			return (now->blk);
+		}
 		bool charbit = now->bitmap->access(p);
 		INT next_p = now->bitmap->rank(p, charbit);
-		if ( charbit == 0 ) {
-			return (_access(now->left, next_p));
-		}
-		else {
-			return (_access(now->right, next_p));
-		}
-
+		return (_access(now->child[charbit], next_p));
 	}
-	STR access ( INT p ) {
+	char* access ( INT p ) {
+		if ( !rank_support ) {
+			std::cout << "wavelet tree access op also needs rank\n";
+			std::cout << "call support_rank() for access ops\n";
+			return (0);
+		}
 		return (_access(root, p));
 	}
-
 /* Rank: count the occurence of alphabet from [0,p) */
-	INT _rank ( NODE *now, STR code, INT p, INT lv ) {
+	INT _rank ( NODE *now, int blk_hash, INT p, int lv ) {
 		if ( isLeaf(now) ) return (p);
-		bool charbit = bool(code[lv]-'0');
-		int next_p = now->bitmap->rank(p, charbit);
-		if ( charbit == 0 ) {
-			return (_rank(now->left, code, next_p, lv+1));
-		}
-		else {
-			return (_rank(now->right, code, next_p, lv+1));
-		}
+		bool charbit = tree->huffcode[blk_hash][lv];
+		INT next_p = now->bitmap->rank(p, charbit);
+		return (_rank(now->child[charbit], blk_hash, next_p, lv+1));
 	}
-	INT rank ( STR c, INT p ) {
+	INT rank ( int blk_hash, INT p ) {
 		if ( !rank_support ) {
 			std::cout << "call support_rank() for rank ops\n";
 			return (0);
 		}
-		if ( tree->huffcode.find(c) == tree->huffcode.end() ) {
+		if ( tree->alphabet[blk_hash] == -1 ) {
 			std::cout << "this alphabet does not belong to exist\n";
 			return (0);
 		}
-		return (_rank(root, tree->huffcode[c], p, 0));
+		return (_rank(root, blk_hash, p, 0));
 	}
 
 /* Select: find the n-th occurence of alphabet */
-	NODE* getLeaf ( NODE *now, STR code, INT lv ) {
-		if ( isLeaf(now) ) return (now);
-		if ( code[lv] == '0' ) {
-			return (getLeaf(now->left, code, lv+1));
+	NODE* getLeaf ( NODE *now, int blk_hash, int lv ) {
+		if ( lv == tree->huff_len[blk_hash] ) {
+			return (now);
 		}
-		else {
-			return (getLeaf(now->right, code, lv+1)); 
-		}
+		return (getLeaf(now->child[tree->huffcode[blk_hash][lv]], blk_hash, lv+1));
 	}
 	INT _selectrev ( NODE *now, bool charbit, INT o ) {
 		int p = now->bitmap->select(o, charbit);
@@ -142,24 +132,23 @@ struct wt {
 		if ( p == -1 ) { // no such answer
 			return (p);
 		}
-
-		if ( now->mama->left == now ) {
+		if ( now->mama->child[0] == now ) {
 			return (_selectrev(now->mama, 0, p));
 		}
 		else {
 			return (_selectrev(now->mama, 1, p));
 		}
 	}
-	INT _select ( NODE *now, STR code, INT o ) {
-		NODE *leaf = getLeaf(now, code, 0);
-		if ( leaf->mama->left == leaf ) {
+	INT _select ( NODE *now, int blk_hash, INT o ) {
+		NODE *leaf = getLeaf(now, blk_hash, 0);
+		if ( leaf->mama->child[0] == leaf ) {
 			return (_selectrev(leaf->mama, 0, o));
 		}
 		else {
 			return (_selectrev(leaf->mama, 1, o));
 		}
 	}
-	INT select ( STR c, INT o ) {
+	INT select ( int blk_hash, INT o ) {
 		if ( o < 0 ) {
 			std::cout << "o >= 0 required\n";
 			return (0);
@@ -168,11 +157,11 @@ struct wt {
 			std::cout << "call support_select() for select ops.\n";
 			return (0);
 		}
-		if ( tree->huffcode.find(c) == tree->huffcode.end() ) {
+		if ( tree->alphabet[blk_hash] == -1 ) {
 			std::cout << "this alphabet does not belong to exist\n";
 			return (0);
 		}
-		return (_select(root, tree->huffcode[c], o));
+		return (_select(root, blk_hash, o));
 	}
 	void support_rank () {
 		_support_rank(root);
@@ -180,11 +169,11 @@ struct wt {
 	}
 	void _support_rank ( NODE *now ) {
 		now->bitmap->support_rank();
-		if ( !isLeaf(now->left) ) {
-			_support_rank(now->left);
+		if ( !isLeaf(now->child[0]) ) {
+			_support_rank(now->child[0]);
 		}
-		if ( !isLeaf(now->right) ) {
-			_support_rank(now->right);
+		if ( !isLeaf(now->child[1]) ) {
+			_support_rank(now->child[1]);
 		}
 	}
 	void support_select () {
@@ -193,11 +182,11 @@ struct wt {
 	}
 	void _support_select ( NODE *now ) {
 		now->bitmap->support_select();
-		if ( now->left != NULL ) {
-			_support_select(now->left);
+		if ( now->child[0] != NULL ) {
+			_support_select(now->child[0]);
 		}
-		if ( now->right != NULL ) {
-			_support_select(now->right);
+		if ( now->child[1] != NULL ) {
+			_support_select(now->child[1]);
 		}
 	}
 }; // end struct wt

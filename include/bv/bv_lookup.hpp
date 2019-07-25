@@ -196,7 +196,7 @@ struct bv_lookup {
 	}
 
 	bool access ( INTLEN p ) {
-		if ( bitvec ) {
+		if ( bitvec != nullptr ) {
 			return (bitvec[p]);
 		}
 		else if ( rank_support ) {
@@ -224,7 +224,8 @@ struct bv_lookup {
 			return (c==1) ? (res) : (p-res);
 		}
 		else {
-			return (0);
+			std::cout << "no rank support\n";
+			exit(1);
 		}
 	}
 
