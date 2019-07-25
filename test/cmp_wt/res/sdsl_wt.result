@@ -1,0 +1,31 @@
+[b04705001@linux5 src]$ cat output.sdsl_wt
+naive rank: 26.6714 seconds
+construct - 15
+time: 460.736
+space: 4479081136
+size: 2478046429
+access 100000000 times, 1105.91 seconds
+access 200000000 times, 1289.13 seconds
+access 400000000 times, 2441.27 seconds
+access 800000000 times, 5125.15 seconds
+rank 100000000 times, 760.376 seconds
+rank 200000000 times, 1438.38 seconds
+rank 400000000 times, 2867.85 seconds
+rank 800000000 times, 5641.87 seconds
+total 20696.6 seconds
+
+[b04705001@linux5 src]$ cat output.sdsl_64
+naive rank: 27.2904 seconds
+construct - 64
+time: 491.933
+space: 4337422672
+size: 2145911781
+access 100000000 times, 1791.53 seconds
+access 200000000 times, 2459.83 seconds
+access 400000000 times, 4552.66 seconds
+access 800000000 times, 9017.78 seconds
+rank 100000000 times, 1482.68 seconds
+rank 200000000 times, 2572.2 seconds
+rank 400000000 times, 5542.69 seconds
+rank 800000000 times, 11073.3 seconds
+total 38520 seconds

@@ -1,0 +1,20 @@
+[b04705001@linux8 ~]$ cat /tmp2/b04705001/SuccinctDS/test/cmp_wt/src/output.suc_wt
+[wt] stream mode
+[wt_huff] stream mode constructor activated
+get_freq: 352.662 seconds
+[huff_wt] empirical frequency
+[huff_wt] node merge...
+construct_tree: 0.003056 seconds
+[wt_huff] Huffman code generated
+gen_code: 0.000311 seconds
+fill_data: 600.254 seconds
+initialize: 952.92 seconds
+naive rank: 21.3716 seconds
+support rank: 38.647 seconds
+access 100000000 times, 231.64 seconds
+access 200000000 times, 460.637 seconds
+access 400000000 times, 906.981 seconds
+rank 100000000 times, 620.191 seconds
+rank 200000000 times, 1210.8 seconds
+rank 400000000 times, 2622.41 seconds
+total: 7065.61 seconds
