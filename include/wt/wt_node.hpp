@@ -30,10 +30,10 @@ struct wt_node {
 	INT bitmapcnt; // for filling bit 1 by 1 ( check huff_wt->fill_bit() )
 	INT len;
 	int blk_hash;
-	char *blk;
+	unsigned char *blk;
 
 	void decode ( int _blk_hash ) {
-		blk = new char [bpa+1];
+		blk = new unsigned char [bpa+1];
 		blk[bpa] = '\0';
 		for ( int i=bpa-1; i>=0; i-- ) {
 			blk[i] = _blk_hash%256;

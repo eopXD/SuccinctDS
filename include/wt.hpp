@@ -62,7 +62,7 @@ struct wt {
 		exit(1);
 	}
 	// batch mode constructor
-	wt ( char *data, INT data_len, INT bpa ) { // bpa = bytes per alphabet
+	wt ( unsigned char *data, INT data_len, INT bpa ) { // bpa = bytes per alphabet
 		std::cout << "[wt] batch mode\n";
 		tree = new WT_T(data, data_len, bpa);
 		root = tree->root;
@@ -82,7 +82,7 @@ struct wt {
 	}
 
 /* Access: access the alphabet on position p */
-	char* _access ( NODE *now, INT p ) {
+	unsigned char* _access ( NODE *now, INT p ) {
 		if ( isLeaf(now) ) {
 			return (now->blk);
 		}
@@ -90,7 +90,7 @@ struct wt {
 		INT next_p = now->bitmap->rank(p, charbit);
 		return (_access(now->child[charbit], next_p));
 	}
-	char* access ( INT p ) {
+	unsigned char* access ( INT p ) {
 		if ( !rank_support ) {
 			std::cout << "wavelet tree access op also needs rank\n";
 			std::cout << "call support_rank() for access ops\n";

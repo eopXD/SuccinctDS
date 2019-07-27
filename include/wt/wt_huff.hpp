@@ -82,7 +82,7 @@ struct wt_huff {
 			exit(1);
 		}	
 		INT buf_size = bpa*65536, sz;
-		char *buf = new char [buf_size];
+		unsigned char *buf = new unsigned char [buf_size];
 		int blk_hash = 0, len = 0; // blk for hashing
 		while ( (sz=read(fd, buf, buf_size)) > 0 ) {
 			for ( INT i=0; i<sz; ++i ) {
@@ -97,7 +97,7 @@ struct wt_huff {
 		close(fd);
 	}
 	// batch mode
-	void get_freq ( char *data, INT data_len ) {
+	void get_freq ( unsigned char *data, INT data_len ) {
 		int blk = 0, len = 0;
 		for ( INT i=0; i<data_len; ++i ) {
 			++len;
@@ -146,7 +146,7 @@ struct wt_huff {
 		dfs(now->child[1], code, len+1);
 	}
 	void decode ( int blk_hash ) {
-		char blk[bpa+1];
+		unsigned char blk[bpa+1];
 		blk[bpa] = '\0';
 		for ( int i=bpa-1; i>=0; i-- ) {
 			blk[i] = blk_hash%256;
@@ -185,8 +185,8 @@ struct wt_huff {
 			std::cout << "fill_data: fail to open\n";
 			return ;
 		}
-		INT buf_size = bpa * 65536, sz;
-		char *buf = new char [buf_size];
+		INT buf_size = bpa*65536, sz;
+		unsigned char *buf = new unsigned char [buf_size];
 		int blk_hash = 0, len = 0;
 		while ( (sz=read(fd, buf, buf_size)) > 0 ) {
 			for ( INT i=0; i<sz; ++i ) {
@@ -200,7 +200,7 @@ struct wt_huff {
 		}	
 		close(fd);
 	}
-	void fill_data ( char *data, INT data_len ) {
+	void fill_data ( unsigned char *data, INT data_len ) {
 		int blk_hash = 0, len = 0;
 		for ( INT i=0; i<data_len; ++i ) {
 			++len;
@@ -226,7 +226,7 @@ struct wt_huff {
 		exit(1);
 	}
 	// batch mode constructor
-	wt_huff ( char *data, INT data_len, int _bpa ) {
+	wt_huff ( unsigned char *data, INT data_len, int _bpa ) {
 		_init(_bpa);
 		std::cout << "[wt_huff] batch mode constructor activated\n";
 		get_freq(data, data_len);
