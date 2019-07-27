@@ -5,13 +5,13 @@
 #include <iostream>
 
 typedef uint64_t INT;
-INT file_size = 100000;
+INT file_size = 2000000000;
 int main ()
 {
 	srand(112358);
-	freopen("small.txt", "w", stdout);
+	freopen("test_data.big", "w", stdout);
 	for ( INT i=0; i<file_size; ++i ) {
-		int c = rand()%256;
+		unsigned char c = rand()%256;
 		putchar(c);
 	}
 	fclose(stdout);

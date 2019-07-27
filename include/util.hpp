@@ -10,8 +10,15 @@
 
 #include <ctime>
 #include <cmath>
+#include <fstream>
 
 namespace eopxd {
+
+std::ifstream::pos_type get_size ( const char* filename ) {
+    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+    return (in.tellg()); 
+}
+
 
 double spent_time ( clock_t stamp ) {
 	clock_t cost = clock() - stamp;
