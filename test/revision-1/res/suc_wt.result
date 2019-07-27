@@ -1,0 +1,20 @@
+[b04705001@linux8 src]$ ./test.suc_wt
+[wt] stream mode
+[wt_huff] stream mode constructor activated
+buf_size: 65536
+get_freq: 6.39984 seconds
+[huff_wt] node merge...
+construct_tree: 0.00309 seconds
+gen_code: 0.001934 seconds
+fill_data: 100.496 seconds
+total: 106.901 seconds
+initialize: 106.901 seconds
+naive rank: 20.3473 seconds
+support rank: 38.4102 seconds
+access 100000000 times, 226.641 seconds
+access 200000000 times, 451.828 seconds
+access 400000000 times, 902.297 seconds
+rank 100000000 times, 502.474 seconds
+rank 200000000 times, 994.896 seconds
+rank 400000000 times, 1982.43 seconds
+total: 5226.22 seconds
