@@ -95,6 +95,7 @@ struct wt_huff {
 			}
 		}	
 		close(fd);
+		delete [] buf;
 	}
 	// batch mode
 	void get_freq ( unsigned char *data, INT data_len ) {
@@ -199,6 +200,7 @@ struct wt_huff {
 			}
 		}	
 		close(fd);
+		delete [] buf;
 	}
 	void fill_data ( unsigned char *data, INT data_len ) {
 		int blk_hash = 0, len = 0;

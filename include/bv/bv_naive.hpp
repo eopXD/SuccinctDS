@@ -54,7 +54,7 @@ struct bv_naive {
 	}
 	INT select ( INT o, bool c ) { // 0th occurence is the first occurence
 		if ( o < 0 ) {
-			return (-1);
+			return (0);
 		}
 		INT cnt = 0;
 		for ( INT p=0; p<len; ++p ) {
@@ -63,7 +63,7 @@ struct bv_naive {
 				return (p);
 			}
 		}
-		return (-1);
+		return (0);
 	}
 
 	void support_rank () {}

@@ -82,39 +82,43 @@ struct wt {
 	}
 
 /* Access: access the alphabet on position p */
-	unsigned char* _access ( NODE *now, INT p ) {
+	void _access ( NODE *now, INT p, unsigned char **res ) {
 		if ( isLeaf(now) ) {
-			return (now->blk);
+			*(res) = now->blk;
+			return ;
 		}
 		bool charbit = now->bitmap->access(p);
 		INT next_p = now->bitmap->rank(p, charbit);
-		return (_access(now->child[charbit], next_p));
+		_access(now->child[charbit], next_p, res);
 	}
-	unsigned char* access ( INT p ) {
-		if ( !rank_support ) {
-			std::cout << "wavelet tree access op also needs rank\n";
-			std::cout << "call support_rank() for access ops\n";
-			return (0);
-		}
-		return (_access(root, p));
+	void access ( INT p, unsigned char **res ) {
+	//	if ( !rank_support ) {
+	//		std::cout << "wavelet tree access op also needs rank\n";
+	//		std::cout << "call support_rank() for access ops\n";
+	//		return (0);
+	//	}
+		_access(root, p, res);
 	}
 /* Rank: count the occurence of alphabet from [0,p) */
-	INT _rank ( NODE *now, int blk_hash, INT p, int lv ) {
-		if ( isLeaf(now) ) return (p);
+	void _rank ( NODE *now, int blk_hash, INT p, int lv, INT *res ) {
+		if ( isLeaf(now) ) {
+			*(res) = p;
+			return ;
+		}
 		bool charbit = tree->huffcode[blk_hash][lv];
 		INT next_p = now->bitmap->rank(p, charbit);
-		return (_rank(now->child[charbit], blk_hash, next_p, lv+1));
+		_rank(now->child[charbit], blk_hash, next_p, lv+1, res);
 	}
-	INT rank ( int blk_hash, INT p ) {
-		if ( !rank_support ) {
-			std::cout << "call support_rank() for rank ops\n";
-			return (0);
-		}
-		if ( tree->alphabet[blk_hash] == -1 ) {
-			std::cout << "this alphabet does not belong to exist\n";
-			return (0);
-		}
-		return (_rank(root, blk_hash, p, 0));
+	void rank ( int blk_hash, INT p, INT *res ) {
+	//	if ( !rank_support ) {
+	//		std::cout << "call support_rank() for rank ops\n";
+	//		return (0);
+	//	}
+	//	if ( tree->alphabet[blk_hash] == -1 ) {
+	//		std::cout << "this alphabet does not belong to exist\n";
+	//		return (0);
+	//	}
+		_rank(root, blk_hash, p, 0, res);
 	}
 
 /* Select: find the n-th occurence of alphabet */
@@ -124,44 +128,42 @@ struct wt {
 		}
 		return (getLeaf(now->child[tree->huffcode[blk_hash][lv]], blk_hash, lv+1));
 	}
-	INT _selectrev ( NODE *now, bool charbit, INT o ) {
-		int p = now->bitmap->select(o, charbit);
+	void _selectrev ( NODE *now, bool charbit, INT o, INT *res ) {
+		INT p = now->bitmap->select(o, charbit);
 		if ( now->mama == nullptr ) { // reach root node
-			return (p);
-		}
-		if ( p == -1 ) { // no such answer
-			return (p);
+			*(res) = p;
+			return ;
 		}
 		if ( now->mama->child[0] == now ) {
-			return (_selectrev(now->mama, 0, p));
+			_selectrev(now->mama, 0, p, res);
 		}
 		else {
-			return (_selectrev(now->mama, 1, p));
+			_selectrev(now->mama, 1, p, res);
 		}
 	}
-	INT _select ( NODE *now, int blk_hash, INT o ) {
+	void _select ( NODE *now, int blk_hash, INT o, INT *res ) {
 		NODE *leaf = getLeaf(now, blk_hash, 0);
 		if ( leaf->mama->child[0] == leaf ) {
-			return (_selectrev(leaf->mama, 0, o));
+			_selectrev(leaf->mama, 0, o, res);
 		}
 		else {
-			return (_selectrev(leaf->mama, 1, o));
+			_selectrev(leaf->mama, 1, o, res);
 		}
 	}
-	INT select ( int blk_hash, INT o ) {
-		if ( o < 0 ) {
-			std::cout << "o >= 0 required\n";
-			return (0);
-		}
-		if ( !select_support ) {
-			std::cout << "call support_select() for select ops.\n";
-			return (0);
-		}
-		if ( tree->alphabet[blk_hash] == -1 ) {
-			std::cout << "this alphabet does not belong to exist\n";
-			return (0);
-		}
-		return (_select(root, blk_hash, o));
+	void select ( int blk_hash, INT o, INT *res ) {
+	//	if ( o < 0 ) {
+	//		std::cout << "o >= 0 required\n";
+	//		return (0);
+	//	}
+	//	if ( !select_support ) {
+	//		std::cout << "call support_select() for select ops.\n";
+	//		return (0);
+	//	}
+	//	if ( tree->alphabet[blk_hash] == -1 ) {
+	//		std::cout << "this alphabet does not belong to exist\n";
+	//		return (0);
+	//	}
+		_select(root, blk_hash, o, res);
 	}
 	void support_rank () {
 		_support_rank(root);
