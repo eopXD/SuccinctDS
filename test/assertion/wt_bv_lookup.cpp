@@ -16,7 +16,7 @@
 
 typedef uint64_t INT;
 
-char str[1000] = "Hi everyone, welcome to the succinct wavelet tree \
+unsigned char str[1000] = "Hi everyone, welcome to the succinct wavelet tree \
 library! I am eopXD.\nThis library seeks for compression of data will \
 maintaining well accessibility, and received help from Professor Tsan-sheng\
 Hsu.\nI am a test string and will be encoded into the wavelet tree.\nIt can \
@@ -44,7 +44,7 @@ INT naive_rank ( int blk_hash, INT pos, int bpa ) {
 using namespace eopxd;
 int main ()
 {
- 	INT n = strlen(str);
+ 	INT n = strlen((char*)str);
  	int bpa = 1;
  	wt<wt_huff<bv_lookup>, bv_lookup> *wt_ptr = 
  		new wt<wt_huff<bv_lookup>, bv_lookup>(str, n, bpa);
@@ -54,8 +54,9 @@ int main ()
 	wt_var.support_rank();
 
 	for ( INT i=0; i<n; ++i ) {
-		char *a0 = wt_ptr->access(i);
-		char *a1 = wt_var.access(i);
+		unsigned char *a0, *a1;
+		wt_ptr->access(i, &a0);
+		wt_var.access(i, &a1);
 		assert(a0[0] == str[i]);
 		assert(a1[0] == str[i]);
 	}
@@ -66,8 +67,9 @@ int main ()
  	for ( INT pos=0; pos<n; pos+=bpa ) {
  		for ( INT j=0; j<v_sz; ++j ) {
  			int blk_hash = vowel[j];
- 			INT r0 = wt_ptr->rank(blk_hash, pos);
-			INT r1 = wt_var.rank(blk_hash, pos);
+ 			INT r0, r1;
+			wt_ptr->rank(blk_hash, pos, &r0);
+			wt_var.rank(blk_hash, pos, &r1);
 			assert(r0 == naive_rank(blk_hash, pos, bpa));
 			assert(r1 == naive_rank(blk_hash, pos, bpa));
  		}

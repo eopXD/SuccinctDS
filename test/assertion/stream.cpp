@@ -18,7 +18,7 @@ typedef uint64_t INT;
 int main ()
 {
 
-	char filename[100] = "stream.cpp";
+	char filename[100] = "test_data.small";
 	int name_len = strlen(filename);
 	int bpa = 1, dummy = 1;
 	wt<wt_huff<bv_lookup>, bv_lookup> *wt_ptr = 
@@ -26,17 +26,18 @@ int main ()
 	
 	wt_ptr->support_rank();
 	
-	char *buf = new char [100000];
+	unsigned char *buf = new unsigned char [1000000];
 	int fd = open(filename, O_RDONLY);
 	if ( fd < 0 ) {
 		std::cout << "fail to open file\n";
 		exit(1);
 	}
 	INT sz;
-	sz = read(fd, buf, 100000);
-	
+	sz = read(fd, buf, 1000000);
+	std::cout << "sz: " << sz << "\n"; 
 	for ( INT i=0; i<sz; ++i ) {
-		char *a0 = wt_ptr->access(i);
+		unsigned char *a0;
+		wt_ptr->access(i, &a0);
 		assert(a0[0] == buf[i]);
 	}
 	exit(0);

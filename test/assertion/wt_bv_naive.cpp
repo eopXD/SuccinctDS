@@ -16,7 +16,7 @@
 
 typedef uint64_t INT;
 
-char str[1000] = "Hi everyone, welcome to the succinct wavelet tree \
+unsigned char str[1000] = "Hi everyone, welcome to the succinct wavelet tree \
 library! I am eopXD.\nThis library seeks for compression of data will \
 maintaining well accessibility, and received help from Professor Tsan-sheng\
 Hsu.\nI am a test string and will be encoded into the wavelet tree.\nIt can \
@@ -44,7 +44,7 @@ INT naive_rank ( int blk_hash, INT pos, int bpa ) {
 // 0th occurence is the first occurence
 INT naive_select ( int blk_hash, INT n, INT occ, int bpa ) {
 	if ( occ < 0 ) {
-		return (-1);
+		return (0);
 	}
 	INT cnt = 0;
 	int tmp_hash = 0, len = 0;
@@ -61,12 +61,12 @@ INT naive_select ( int blk_hash, INT n, INT occ, int bpa ) {
 			tmp_hash = len = 0;
 		}
 	}
-	return (-1);
+	return (0);
 }
 using namespace eopxd;
 int main ()
 {
- 	INT n = strlen(str);;
+ 	INT n = strlen((char*)str);;
  	int bpa = 1;
 
  	wt<wt_huff<bv_naive>, bv_naive> *wt_ptr = 
@@ -79,8 +79,9 @@ int main ()
  	wt_var.support_select();
 
 	for ( INT i=0; i<n; ++i ) {
-		char *a0 = wt_ptr->access(i);
-		char *a1 = wt_var.access(i);
+		unsigned char *a0, *a1;
+		wt_ptr->access(i, &a0);
+		wt_var.access(i, &a1);
 		assert(a0[0] == str[i]);
 		assert(a1[0] == str[i]);
 	}
@@ -91,14 +92,16 @@ int main ()
 	for ( INT pos=0; pos<n; ++pos ) {
 		for ( INT j=0; j<v_sz; ++j ) {
 			int blk_hash = vowel[j];
-			INT r0 = wt_ptr->rank(blk_hash, pos);
-			INT r1 = wt_var.rank(blk_hash, pos);
+			INT r0, r1;
+			wt_ptr->rank(blk_hash, pos, &r0);
+			wt_var.rank(blk_hash, pos, &r1);
 			assert(r0 == naive_rank(blk_hash, pos, bpa));
-			assert(r1 == naive_rank(blk_hash, pos, bpa));			
+			assert(r1 == naive_rank(blk_hash, pos, bpa));
 			for ( INT k=0; k<10; ++k ) { // select op on random occ.
-				INT occ = (pos==0) ? 0 : rand()%pos;
-				INT s0 = wt_ptr->select(blk_hash, occ);
-				INT s1 = wt_var.select(blk_hash, occ);
+				INT occ = (pos==0)?0:rand()%10;
+				INT s0, s1;
+				wt_ptr->select(blk_hash, occ, &s0);
+				wt_var.select(blk_hash, occ, &s1);
 				assert(s0 == naive_select(blk_hash, n, occ, bpa));
 				assert(s1 == naive_select(blk_hash, n, occ, bpa));
 			}
