@@ -16,12 +16,11 @@ With random seed `112358` I generated a file of `2e9` bytes (\~1.8G). Each bytes
 
 ## initialization
 
-TFor a 1.8G file, loaded with stream mode.
+For a 1.8G file, loaded with stream mode.
 
 | self-implemented RRR        | sdsl RRR<15>     | sdsl RRR<63>        |
 |-----------------------------|------------------|---------------------|
 | 991.567 (x2.15)             | 460.736 (x1)     | 491.933 (x1.07)     |
-
 
 #### batch mode
 
@@ -66,7 +65,7 @@ To reach the full extent of becoming a succinct data structure, it is a necessit
 ### Psuedo code of access operation of Wavelet Tree
 
 ```
-CHAR access ( NODE node, INT pos) {
+CHAR* access ( NODE node, INT pos) {
 	if node is a leaf:
 		return (character of the leaf)
 	bit = node->bitvec->access(pos)
