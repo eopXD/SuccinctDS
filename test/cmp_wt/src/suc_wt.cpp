@@ -96,10 +96,10 @@ int main ( int argc, char *argv[] )
 	for ( INT i=0; i<times; ++i ) {
 		INT pos = rand()%filesize;
 		INT r0 = wt_ptr->rank(a, pos);
-		INT r1 = wt_ptr->rank(b, pos);
+//		INT r1 = wt_ptr->rank(b, pos);
 
 		assert(r0 == rank[0][pos]);
-		assert(r1 == rank[1][pos]);
+//		assert(r1 == rank[1][pos]);
 	}
 	std::cout << "rank " << times << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
@@ -107,20 +107,20 @@ int main ( int argc, char *argv[] )
 	for ( INT i=0; i<twice; ++i ) {
 		INT pos = rand()%filesize;
 		INT r0 = wt_ptr->rank(a, pos);
-		INT r1 = wt_ptr->rank(b, pos);
+//		INT r1 = wt_ptr->rank(b, pos);
 
 		assert(r0 == rank[0][pos]);
-		assert(r1 == rank[1][pos]);
+//		assert(r1 == rank[1][pos]);
 	}
 	std::cout << "rank " << twice << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 	for ( INT i=0; i<fourth; ++i ) {
 		INT pos = rand()%filesize;
 		INT r0 = wt_ptr->rank(a, pos);
-		INT r1 = wt_ptr->rank(b, pos);
+//		INT r1 = wt_ptr->rank(b, pos);
 
 		assert(r0 == rank[0][pos]);
-		assert(r1 == rank[1][pos]);
+//		assert(r1 == rank[1][pos]);
 	}
 	std::cout << "rank " << fourth << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
