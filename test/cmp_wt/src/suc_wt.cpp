@@ -69,58 +69,61 @@ int main ( int argc, char *argv[] )
 	std::cout << "support rank: " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 
+	unsigned char *res_access;
+	INT res_rank;
+
 	INT times = 100000000;
 	INT twice = times*2, fourth = times*4;
 /* access operation */
 	for ( INT i=0; i<times; ++i ) {
 		INT pos = rand()%filesize;
-		wt_ptr->access(pos);
+		wt_ptr->access(pos, &res_access);
 	}
 	std::cout << "access " << times << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 
 	for ( INT i=0; i<twice; ++i ) {
 		INT pos = rand()%filesize;
-		wt_ptr->access(pos);
+		wt_ptr->access(pos, &res_access);
 	}
 	std::cout << "access " << twice << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 
 	for ( INT i=0; i<fourth; ++i ) {
 		INT pos = rand()%filesize;
-		wt_ptr->access(pos);
+		wt_ptr->access(pos, &res_access);
 	}
 	std::cout << "access " << fourth << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 /* rank operation */
 	for ( INT i=0; i<times; ++i ) {
 		INT pos = rand()%filesize;
-		INT r0 = wt_ptr->rank(a, pos);
-		INT r1 = wt_ptr->rank(b, pos);
+		wt_ptr->rank(a, pos, &res_rank);
+		//INT r1 = wt_ptr->rank(b, pos);
 
-		assert(r0 == rank[0][pos]);
-		assert(r1 == rank[1][pos]);
+		assert(res_rank == rank[0][pos]);
+		//assert(r1 == rank[1][pos]);
 	}
 	std::cout << "rank " << times << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 
 	for ( INT i=0; i<twice; ++i ) {
 		INT pos = rand()%filesize;
-		INT r0 = wt_ptr->rank(a, pos);
-		INT r1 = wt_ptr->rank(b, pos);
+		wt_ptr->rank(a, pos, &res_rank);
+		//INT r1 = wt_ptr->rank(b, pos);
 
-		assert(r0 == rank[0][pos]);
-		assert(r1 == rank[1][pos]);
+		assert(res_rank == rank[0][pos]);
+		//assert(r1 == rank[1][pos]);
 	}
 	std::cout << "rank " << twice << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 	for ( INT i=0; i<fourth; ++i ) {
 		INT pos = rand()%filesize;
-		INT r0 = wt_ptr->rank(a, pos);
-		INT r1 = wt_ptr->rank(b, pos);
+		wt_ptr->rank(a, pos, &res_rank);
+		//INT r1 = wt_ptr->rank(b, pos);
 
-		assert(r0 == rank[0][pos]);
-		assert(r1 == rank[1][pos]);
+		assert(res_rank == rank[0][pos]);
+		//assert(r1 == rank[1][pos]);
 	}
 	std::cout << "rank " << fourth << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
