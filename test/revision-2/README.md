@@ -25,4 +25,14 @@ I then retested both revisions on the same machine, my previous observation may 
 | rank 2e8        | 514.915    | 497.532    | 1.035   |
 | rank 4e8        | 1027.72    | 998.297    | 1.029   |
 
-There is approximately 3% of speedup compared to the first revision. I have expected more of an improvement.
+There is approximately 3~6% of speedup compared to the first revision. I have expected more of an improvement.
+
+## Ratio
+
+| Operation  | bitvector<rrr15> | wavelet<rrr15> | ratio  |
+|------------|------------------|----------------|--------|
+| access 1e8 | 26.5677          | 223.05         | 8.395  |
+| access 2e8 | 40.9602          | 442.764        | 10.809 |
+| rank 1e8   | 51.2577          | 239.224        | 4.667  |
+| rank 2e8   | 77.1612          | 497.532        | 6.448  |
+
