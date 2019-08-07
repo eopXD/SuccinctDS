@@ -61,7 +61,7 @@ uint64_t elem_0 ( uint64_t c ) { // first element of a given popcount
 	return ((1<<c)-1);
 }
 
-void genlookup ()  { 
+void genlookup ( uint64_t *mem_used )  { 
 	
 	step = new uint64_t [blk_size+5];
 	permsum = new uint64_t [blk_size+5];
@@ -90,6 +90,15 @@ void genlookup ()  {
 			v = next_perm(v) & blk_mask;
 		}
 	}
+
+	*(mem_used) += sizeof(uint64_t)*(blk_size+5)*2;
+	*(mem_used) += sizeof(uint16_t)*((1<<blk_size)+5)*2;
+	*(mem_used) += sizeof(uint8_t)*((1<<blk_size)+5);
+
+	//std::cout << "step & persum: " << sizeof(uint64_t)*(blk_size+5)*2 << "\n";
+	//std::cout << "lookperm & revlookup: " << sizeof(uint16_t)*((1<<blk_size)+5)*2 << "\n";
+	//std::cout << "lookpop: " << sizeof(uint8_t)*((1<<blk_size)+5) << "\n";
+	
 }
 
 uint8_t get_pop ( uint16_t bitstring ) { 
@@ -118,46 +127,78 @@ struct bv_lookup {
 	INTPERM *perm;
 	INTLEN *superpop;
 
+	INTLEN mem_used;
+
+	void account_mem () { // 65 Byte
+		mem_used += sizeof(bool*); // 8 Byte
+		mem_used += sizeof(INTPOP*); // 8 Byte
+		mem_used += sizeof(INTPERM*); // 8 Byte
+		mem_used += sizeof(INTLEN*); // 8 Byte
+		mem_used += sizeof(bool); // 1 Byte (sizeof(bool) == sizeof(char))
+		mem_used += sizeof(INTLEN)*4; // 8 Byte * 4
+	}
+
 	// default constructor (SHALL NOT BE USED)
 	bv_lookup () {
+		mem_used = 0;
+
 		rank_support = false;
 		len = blkcnt = superblkcnt = 0;
 		bitvec = nullptr, pop = nullptr, perm = nullptr, superpop = nullptr;
+		
+		account_mem();
 	}
 
 	// main constructor
 	bv_lookup ( INTLEN _len ) {
+		mem_used = 0;
+
 		rank_support = false;
 		len = _len;
 		bitvec = new bool [len];
 		blkcnt = superblkcnt = 0;
 		pop = nullptr, perm = nullptr, superpop = nullptr;
+		
+		mem_used += sizeof(bool)*len;
+		account_mem();
 	}
 
 	// destructor
 	~bv_lookup () {
-		if ( bitvec ) delete[] bitvec;
-		if ( pop ) delete[] pop;
-		if ( perm ) delete[] perm;
-		if ( superpop ) delete[] superpop;
+		if ( bitvec ) {
+			delete[] bitvec;
+		}
+		if ( pop ) {
+			delete[] pop;
+		}
+		if ( perm ) {
+			delete[] perm;
+		}
+		if ( superpop ) {
+			delete[] superpop;
+		}
 	}
 
 	// call this to delete original bitstring
 	void kill_bitvec () {
-		if ( bitvec ) delete[] bitvec;
+		if ( bitvec ) {
+			delete[] bitvec;
+			mem_used -= sizeof(bool)*len;
+			//std::cout << "bitvec deleted, size: " << sizeof(bool)*len << "\n";
+		}
 		bitvec = nullptr;
 	}
 
 	// make bitvec to representations (2-level blocking)
-	void support_rank () {
+	void support_rank () { // rank support also changes memory used
 		if ( lookpop == nullptr ) {
 			//std::cout << "[bv_lookup]: construct lookup table\n";
-			genlookup();
+			genlookup(&mem_used);
 		}
 		pop = new INTPOP [(len+blk_size-1)/blk_size];
 		perm = new INTPERM [(len+blk_size-1)/blk_size];
-		superpop = new INTLEN [(len+superblk_size-1)/superblk_size];
-
+		superpop = new INTLEN [(len+popblk_size-1)/popblk_size];
+		
 		blkcnt = superblkcnt = 0;
 		superpop[superblkcnt++] = 0;
 
@@ -191,8 +232,18 @@ struct bv_lookup {
 			}
 		}
 
+
 		rank_support = true;
 		kill_bitvec(); // the real bitvec is no longer needed (to save space)
+		
+		mem_used += sizeof(INTPOP)*((len+blk_size-1)/blk_size);
+		mem_used += sizeof(INTPERM)*((len+blk_size-1)/blk_size);
+		mem_used += sizeof(INTLEN)*((len+popblk_size-1)/popblk_size);
+		
+		//std::cout<< "support_rank\n";
+		//std::cout << "pop: " << sizeof(INTPOP)*((len+blk_size-1)/blk_size) << "\n";
+		//std::cout << "perm: " << sizeof(INTPERM)*((len+blk_size-1)/blk_size) << "\n";
+		//std::cout << "superpop: " << sizeof(INTLEN)*((len+popblk_size-1)/popblk_size) << "\n";
 	}
 
 	bool access ( INTLEN p ) {

@@ -32,38 +32,70 @@ struct wt_node {
 	int blk_hash;
 	unsigned char *blk;
 
-	void decode ( int _blk_hash ) {
+	INT mem_used;
+
+	void account_mem () { // 72 B 
+		mem_used += sizeof(wt_node*)*3; // 24 B
+		mem_used += sizeof(BV*); // 8 B
+		mem_used += sizeof(unsigned char*); // 8 B
+		mem_used += sizeof(INT)*3; // 24B
+		mem_used += sizeof(int)*2; // 8 B
+	}
+
+	void decode ( int _blk_hash ) { // "bpa+1" Byte for alphabet of leaf node
 		blk = new unsigned char [bpa+1];
 		blk[bpa] = '\0';
 		for ( int i=bpa-1; i>=0; i-- ) {
 			blk[i] = _blk_hash%256;
 			_blk_hash >>= 8;
 		}
+	
+		mem_used += sizeof(unsigned char)*(bpa+1);
 	}
-	// default constructor
+	// default constructor (usually not called)
 	wt_node () {
+		mem_used = 0;
+
 		mama = child[0] = child[1] = nullptr;
 		bitmap = nullptr;
 		blk = nullptr;
 		len = bitmapcnt = 0;
 		bitmap = new BV(len);
+
+		mem_used += bitmap->mem_used;
+		account_mem();
 	}
 
 	// leaf constructor (leaf nodes don't need bitmap)
 	wt_node ( int _blk_hash, int _bpa, INT _len ) {
+		mem_used = 0;
+
 		mama = child[0] = child[1] = nullptr;
 		len = _len, bpa = _bpa;
 		blk_hash = _blk_hash;
 		decode(_blk_hash);
+
+		account_mem();
 	}
 
 	// internal node constructor
 	wt_node ( wt_node *a, wt_node *b ) { 
+		mem_used = 0;
+
 		mama = nullptr;
 		blk = nullptr;
 		child[0] = a, child[1] = b;
 		len = a->len+b->len, bitmapcnt = 0;
 		bitmap = new BV(len);
+
+		mem_used += bitmap->mem_used;
+		account_mem();
+	}
+
+	void support_rank () {
+		mem_used -= bitmap->mem_used;
+		bitmap->support_rank();
+		mem_used += bitmap->mem_used;
 	}
 
 	void display () {

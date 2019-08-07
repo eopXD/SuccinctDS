@@ -24,15 +24,31 @@ struct bv_naive {
 	INT len;
 	bool *bitvec;
 
+	INT mem_used;
+
+	void account_mem () {
+		mem_used += sizeof(bool*);
+		mem_used += sizeof(INT)*2;
+	}
+
 	// default constructor
 	bv_naive () {
+		mem_used = 0;
+
 		bitvec = nullptr;
+
+		account_mem();
 	}
 
 	// main constructor
 	bv_naive ( INT _len ) {
+		mem_used = 0;
+
 		len = _len;
 		bitvec = new bool [len];
+	
+		mem_used += sizeof(bool)*len;
+		account_mem();
 	}
 	
 	// destructor
