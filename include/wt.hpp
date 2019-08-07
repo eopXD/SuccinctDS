@@ -62,7 +62,7 @@ struct wt {
 	void account_mem () {
 		mem_used += tree->mem_used;
 		
-		std::cout << "tree_structure: " << tree->mem_used << "\n";
+		//std::cout << "tree_structure: " << tree->mem_used << "\n";
 
 		// 26 Bytes
 		mem_used += sizeof(WT_T*); // 8 Byte

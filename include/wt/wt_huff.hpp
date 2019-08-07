@@ -114,18 +114,18 @@ struct wt_huff {
 	void construct_tree () {
 
 		mem_used += sizeof(VII)+(sizeof(PII)*freq.size());
-		std::cout << "vector<PII> freq: " << sizeof(VII)+(sizeof(PII)*freq.size()) << "\n";
+		//std::cout << "vector<PII> freq: " << sizeof(VII)+(sizeof(PII)*freq.size()) << "\n";
 		std::cout << "[huff_wt] empirical frequency\n";
 		for ( INT i=0; i<freq.size(); ++i ) {
 			std::cout << "\t" << freq[i].second << ":" << freq[i].first << "\n";
 			NODE *a = new NODE(freq[i].second, bpa, freq[i].first);
-			std::cout << "leaf node: " << a->mem_used << "\n";	
+			//std::cout << "leaf node: " << a->mem_used << "\n";	
 			mem_used += a->mem_used; // memory of node, leaf node no  bitvec
 			
 			vec.push_back(a);
 		}
 		mem_used += sizeof(VNODE)+(sizeof(NODE*)*vec.size());
-		std::cout << "vector<NODE *> vec: " << sizeof(VNODE)+(sizeof(NODE*)*vec.size()) << "\n";
+		//std::cout << "vector<NODE*> vec: " << sizeof(VNODE)+(sizeof(NODE*)*vec.size()) << "\n";
 
 		std::cout << "[huff_wt] node merge...\n";
 		while ( vec.size() > 1 ) {
@@ -137,7 +137,7 @@ struct wt_huff {
 			vec.pop_back(); vec.pop_back();
 			NODE *c = new NODE(a, b);
 			
-			std::cout << "internal node: " << c->mem_used << "\n";
+			//std::cout << "internal node: " << c->mem_used << "\n";
 			mem_used += c->mem_used; // memory of node, including bitvec
 
 			a->mama = b->mama = c;
@@ -152,7 +152,7 @@ struct wt_huff {
 			huffcode[now->blk_hash] = new bool [len];
 			
 			mem_used += sizeof(bool)*len;
-			std::cout << "huffcode: " << sizeof(bool)*len << "\n";
+			//std::cout << "huffcode: " << sizeof(bool)*len << "\n";
 
 			huff_len[now->blk_hash] = len;
 			for ( int i=0; i<len; ++i ) {
@@ -244,13 +244,13 @@ struct wt_huff {
 	void account_mem () {
 		// huffcode[] will be added in gen_code
 		mem_used += sizeof(alphabet);
-		std::cout << "alphabet: " << sizeof(alphabet) << "\n";
+		//std::cout << "alphabet: " << sizeof(alphabet) << "\n";
 		mem_used += sizeof(huffcode);
-		std::cout << "huffcode: " << sizeof(huffcode) << "\n";
+		//std::cout << "huffcode: " << sizeof(huffcode) << "\n";
 		mem_used += sizeof(huff_len); 
-		std::cout << "huff_len: " << sizeof(huff_len) << "\n";
+		//std::cout << "huff_len: " << sizeof(huff_len) << "\n";
 		mem_used += sizeof(int)*2; // idx, bpa (8 Byte)
-		std::cout << "idx, bpa: " << sizeof(int)*2 << "\n";
+		//std::cout << "idx, bpa: " << sizeof(int)*2 << "\n";
 	}
 	// defualt constructor (SHALL NOT BE CALLED)
 	wt_huff () {
