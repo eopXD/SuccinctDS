@@ -52,10 +52,24 @@ struct wt {
 	typedef bitvector_type BV;
 	typedef wt_node<BV> NODE;
 
-	WT_T *tree;
-	NODE *root;
-
+	WT_T *tree; // tree structure (alphabet set, huffcode, memory used by tree)
+	NODE *root; // root node of tree
+	
 	bool rank_support, select_support;
+
+	INT mem_used; // memory allocated
+
+	void account_mem () {
+		mem_used += tree->mem_used;
+		
+		std::cout << "tree_structure: " << tree->mem_used << "\n";
+
+		// 26 Bytes
+		mem_used += sizeof(WT_T*); // 8 Byte
+		mem_used += sizeof(NODE*); // 8 Byte 
+		mem_used += sizeof(bool)*2; // 2 Byte
+		mem_used += sizeof(INT); // 8 Byte
+	}
 
 	wt () {
 		std::cout << "[wt] give me data lah ~~~\n";
@@ -67,6 +81,8 @@ struct wt {
 		tree = new WT_T(data, data_len, bpa);
 		root = tree->root;
 		rank_support = select_support = false;
+		mem_used = 0;
+		account_mem();
 	}
 	// stream mode constructor (last argument is dummy variable)
 	wt ( char filename[], int name_len, INT bpa, bool dummy ) {
@@ -74,6 +90,8 @@ struct wt {
 		tree = new WT_T(filename, name_len, bpa, dummy);
 		root = tree->root;
 		rank_support = select_support = false;
+		mem_used = 0;
+		account_mem();
 	}
 
 /* Check if the node is a leaf node (only leaf nodes)*/
@@ -170,7 +188,10 @@ struct wt {
 		rank_support = true;
 	}
 	void _support_rank ( NODE *now ) {
-		now->bitmap->support_rank();
+		mem_used -= now->mem_used;
+		now->support_rank();
+		mem_used += now->mem_used;
+
 		if ( !isLeaf(now->child[0]) ) {
 			_support_rank(now->child[0]);
 		}

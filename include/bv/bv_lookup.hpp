@@ -184,7 +184,7 @@ struct bv_lookup {
 		if ( bitvec ) {
 			delete[] bitvec;
 			mem_used -= sizeof(bool)*len;
-			//std::cout << "bitvec deleted, size: " << sizeof(bool)*len << "\n";
+			std::cout << "bitvec deleted, size: " << sizeof(bool)*len << "\n";
 		}
 		bitvec = nullptr;
 	}
@@ -240,10 +240,10 @@ struct bv_lookup {
 		mem_used += sizeof(INTPERM)*((len+blk_size-1)/blk_size);
 		mem_used += sizeof(INTLEN)*((len+popblk_size-1)/popblk_size);
 		
-		//std::cout<< "support_rank\n";
-		//std::cout << "pop: " << sizeof(INTPOP)*((len+blk_size-1)/blk_size) << "\n";
-		//std::cout << "perm: " << sizeof(INTPERM)*((len+blk_size-1)/blk_size) << "\n";
-		//std::cout << "superpop: " << sizeof(INTLEN)*((len+popblk_size-1)/popblk_size) << "\n";
+		std::cout<< "support_rank\n";
+		std::cout << "pop: " << sizeof(INTPOP)*((len+blk_size-1)/blk_size) << "\n";
+		std::cout << "perm: " << sizeof(INTPERM)*((len+blk_size-1)/blk_size) << "\n";
+		std::cout << "superpop: " << sizeof(INTLEN)*((len+popblk_size-1)/popblk_size) << "\n";
 	}
 
 	bool access ( INTLEN p ) {
