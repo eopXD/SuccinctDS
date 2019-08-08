@@ -53,7 +53,7 @@ struct wt {
 	typedef wt_node<BV> NODE;
 
 	WT_T *tree; // tree structure (alphabet set, huffcode, memory used by tree)
-	NODE *root; // root node of tree
+//	NODE *root; // root node of tree
 	
 	bool rank_support, select_support;
 
@@ -66,7 +66,7 @@ struct wt {
 
 		// 26 Bytes
 		mem_used += sizeof(WT_T*); // 8 Byte
-		mem_used += sizeof(NODE*); // 8 Byte 
+//		mem_used += sizeof(NODE*); // 8 Byte 
 		mem_used += sizeof(bool)*2; // 2 Byte
 		mem_used += sizeof(INT); // 8 Byte
 	}
@@ -79,7 +79,7 @@ struct wt {
 	wt ( unsigned char *data, INT data_len, INT bpa ) { // bpa = bytes per alphabet
 		std::cout << "[wt] batch mode\n";
 		tree = new WT_T(data, data_len, bpa);
-		root = tree->root;
+		//root = tree->root;
 		rank_support = select_support = false;
 		mem_used = 0;
 		account_mem();
@@ -88,7 +88,7 @@ struct wt {
 	wt ( char filename[], int name_len, INT bpa, bool dummy ) {
 		std::cout << "[wt] stream mode\n";
 		tree = new WT_T(filename, name_len, bpa, dummy);
-		root = tree->root;
+		//root = tree->root;
 		rank_support = select_support = false;
 		mem_used = 0;
 		account_mem();
@@ -115,7 +115,7 @@ struct wt {
 	//		std::cout << "call support_rank() for access ops\n";
 	//		return (0);
 	//	}
-		_access(root, p, res);
+		_access(tree->root, p, res);
 	}
 /* Rank: count the occurence of alphabet from [0,p) */
 	void _rank ( NODE *now, int blk_hash, INT p, int lv, INT *res ) {
@@ -136,7 +136,7 @@ struct wt {
 	//		std::cout << "this alphabet does not belong to exist\n";
 	//		return (0);
 	//	}
-		_rank(root, blk_hash, p, 0, res);
+		_rank(tree->root, blk_hash, p, 0, res);
 	}
 
 /* Select: find the n-th occurence of alphabet */
@@ -181,10 +181,10 @@ struct wt {
 	//		std::cout << "this alphabet does not belong to exist\n";
 	//		return (0);
 	//	}
-		_select(root, blk_hash, o, res);
+		_select(tree->root, blk_hash, o, res);
 	}
 	void support_rank () {
-		_support_rank(root);
+		_support_rank(tree->root);
 		rank_support = true;
 	}
 	void _support_rank ( NODE *now ) {
@@ -200,7 +200,7 @@ struct wt {
 		}
 	}
 	void support_select () {
-		_support_select(root);
+		_support_select(tree->root);
 		select_support = true;
 	}
 	void _support_select ( NODE *now ) {
