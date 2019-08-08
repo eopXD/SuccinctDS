@@ -53,7 +53,6 @@ struct wt {
 	typedef wt_node<BV> NODE;
 
 	WT_T *tree; // tree structure (alphabet set, huffcode, memory used by tree)
-//	NODE *root; // root node of tree
 	
 	bool rank_support, select_support;
 
@@ -66,7 +65,6 @@ struct wt {
 
 		// 26 Bytes
 		mem_used += sizeof(WT_T*); // 8 Byte
-//		mem_used += sizeof(NODE*); // 8 Byte 
 		mem_used += sizeof(bool)*2; // 2 Byte
 		mem_used += sizeof(INT); // 8 Byte
 	}
@@ -79,7 +77,6 @@ struct wt {
 	wt ( unsigned char *data, INT data_len, INT bpa ) { // bpa = bytes per alphabet
 		std::cout << "[wt] batch mode\n";
 		tree = new WT_T(data, data_len, bpa);
-		//root = tree->root;
 		rank_support = select_support = false;
 		mem_used = 0;
 		account_mem();
@@ -88,7 +85,6 @@ struct wt {
 	wt ( char filename[], int name_len, INT bpa, bool dummy ) {
 		std::cout << "[wt] stream mode\n";
 		tree = new WT_T(filename, name_len, bpa, dummy);
-		//root = tree->root;
 		rank_support = select_support = false;
 		mem_used = 0;
 		account_mem();
