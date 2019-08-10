@@ -1,54 +1,31 @@
-sdsl version 2.1.1
+# compact rrr
 
-# bit vector
+With `misalign.hpp`, rrr bit vector can reach to its optimal extent of compression rate.
 
-I am comparing my rrr bit vector (support rank) with the ones of sdsl library. The results are shown in `*.result`. Comparing the 2 implementations, with the same blocksize both rrr vectors show similar result.
+## Basic Block = `15` bit
 
-sdsl supports bigger block size, which is a tradeoff between time and space. it shows that with bigger blocksize the time of access/rank also increases linearly (while the initialization time is x2 faster)
+| Usage        | Optimal                |
+|--------------|------------------------|
+| Popcount     | 4 bit                  |
+| Permutation  | 13 bit                 |
+| SuperBlkPop  | 0.5 bit                |
+| Total        | 17.5 bit               |
+| Ratio        | 1.167 (16.7% overhead) |
 
-## testing file
+## Speed difference
 
-With random seed `112358`, I generated a random bitstring of length `1e10` (\~1.1G).
+| # of access | original RRR<15>   | compact RRR<15>     | ratio | 
+|-------------|--------------------|---------------------|-------|
+| 100000000   | 26.5677            | 28.2317             | 1.062 |
+| 200000000   | 40.9602            | 42.22               | 1.03  |
+| 400000000   | 78.5998            | 84.5876             | 1.076 |
+| 800000000   | 159.596            | 168.934             | 1.059 |
 
-## inital compression (seconds)
+| # of rank   | original RRR<15>   | compact RRR<15>     | ratio | 
+|-------------|--------------------|---------------------|-------|
+| 100000000   | 51.2577            | 68.7298             | 1.34  |
+| 200000000   | 77.1612            | 112.499             | 1.458 |
+| 400000000   | 154.828            | 226.282             | 1.46  |
+| 800000000   | 315.236            | 450.332             | 1.428 |
 
-| self-implemented RRR | sdsl RRR<15> | sdsl RRR<63> |
-|----------------------|--------------|--------------|
-| 21.481               | 37.587       | 11.9815      |
-
-## assertion
-
-assertions are added to confirm the correctness of functionality of the bit vector.
-
-### self implemented
-
-![](self_assert_access.png)
-![](self_assert_rank.png)
-
-### sdsl
-
-![](sdsl_assert_access.png)
-![](sdsl_assert_rank.png)
-
-
-## access operation  (seconds)
-
-| # of access | self RRR<15>                    | sdsl RRR<15>             | sdsl RRR<63>             |
-|-------------|---------------------------------|--------------------------|--------------------------|
-| 100000000   | 26.5677  (2.65677e-7)           | 26.3428 (2.63428e-7)     | 53.8254   (5.38254e-7)   |
-| 200000000   | 40.9602  (2.04801e-7)           | 51.7332 (2.58666e-7)     | 104.854   (5.2427e-7)    |
-| 400000000   | 78.5998  (1.964995e-7)          | 105.318 (2.63295e-7)     | 219.478   (5.48695e-7)   |
-| 800000000   | 159.596  (1.99495e-7)           | 215.323 (2.69154e-7)     | 440.612   (5.50765e-7)   |
-
-![](access_op.png)
-
-## rank operation (seconds)
-
-| # of rank   | self RRR<15>                    | sdsl RRR<15>             | sdsl RRR<63>             |
-|-------------|---------------------------------|--------------------------|--------------------------|
-| 100000000   | 51.2577 (5.12577e-7)            | 37.7385 (3.77385e-7)     | 67.9364 (6.79364e-7)     |
-| 200000000   | 77.1612 (3.85806e-7)            | 75.1629 (3.758145e-7)    | 151.004 (7.5502e-7)      |
-| 400000000   | 154.828 (3.8707e-7)             | 162.457 (4.061425e-7)    | 262.063 (6.551575e-7)    |
-| 800000000   | 315.236 (3.94045e-7)            | 306.403 (3.8300375e-7)   | 535.298 (6.691225e-7)    |
-
-![](rank_op.png)
+access shows minor speed difference, approximately of 5%~8% slower than the original uncompact access. rank operation, however, based on access operation, accumulates the delay of access operation, hencse show a severe delay of 35%~47%.
