@@ -25,5 +25,23 @@ double spent_time ( clock_t stamp ) {
 	return ((double)cost/CLOCKS_PER_SEC);
 }
 
+void line () {
+	std::cout << "===========================================\n";
+}
+void star_line () {
+	std::cout << "*******************************************\n";
+}
+void decimal_to_binary ( int length, uint64_t x ) {
+	int str[100] = {};
+	int now = 0;
+	while ( x > 0 ) {
+		str[now++] = x%2;
+		x /= 2;
+	}
+	for ( int i=length-1; i>=0; i-- ) {
+		std::cout << str[i];
+	} std::cout << "\n";
+}
+
 } // end namespace
 #endif

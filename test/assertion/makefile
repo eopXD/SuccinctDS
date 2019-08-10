@@ -7,6 +7,7 @@ all:
 	$(CPLUSPLUS) wt_bv_lookup.cpp -o test.wt_bv_lookup
 	$(CPLUSPLUS) stream.cpp -o test.stream
 	$(CPLUSPLUS) mem_used_bv_lookup.cpp -o test.mem_used_bv_lookup
+	$(CPLUSPLUS) misalign.cpp -o test.misalign
 bv_lookup:
 	$(CPLUSPLUS) bv_lookup.cpp -o test.bv_lookup
 wt_bv_naive:
@@ -19,6 +20,8 @@ mem_used_bv_lookup:
 	$(CPLUSPLUS) mem_used_bv_lookup.cpp -o test.mem_used_bv_lookup
 mem_used_wt:
 	$(CPLUSPLUS) mem_used_wt.cpp -o test.mem_used_wt
+misalign:
+	$(CPLUSPLUS) misalign.cpp -o test.misalign
 
 clean:
 	rm test.*
