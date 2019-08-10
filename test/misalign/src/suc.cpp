@@ -14,18 +14,20 @@
 #include "include/util.hpp"
 using namespace eopxd;
 
+typedef uint8_t VAR;
+
 int main ()
 {
 	clock_t start = clock(), stamp = clock();
 	srand(112358);
 	uint64_t allocate_size = 1000000000;
-	misalign<13, uint16_t, 16> compact13(allocate_size);
+	misalign<4, VAR, 8> compact13(allocate_size);
 	
 	std::cout << "initialize: " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 
-	uint16_t *ans;
-	ans = new uint16_t [allocate_size];
+	VAR *ans;
+	ans = new VAR [allocate_size];
 /*	while ( 1 ) {
 		int op;
 		std::cout << "enter op (0: access, 1 assign): ";
@@ -51,7 +53,7 @@ int main ()
 
 	for ( uint64_t i=0; i<times; ++i ) {
 		int pos = rand()%compact13.max_pos;
-		int val = rand()%compact13.max_val;
+		uint64_t val = rand()%compact13.max_val;
 		ans[pos] = val;
 		compact13.assign(pos, val, 1);
 	}
@@ -59,7 +61,7 @@ int main ()
 	stamp = clock();
 	for ( uint64_t i=0; i<times; ++i ) {
 		int pos = rand()%compact13.max_pos;
-		uint16_t res = compact13.access(pos);
+		VAR res = compact13.access(pos);
 		assert(ans[pos] == res);	
 	}
 	std::cout << "access " << times << " times, " << spent_time(stamp) << " seconds\n";
@@ -67,7 +69,7 @@ int main ()
 	
 	for ( uint64_t i=0; i<twice; ++i ) {
 		int pos = rand()%compact13.max_pos;
-		int val = rand()%compact13.max_val;
+		uint64_t val = rand()%compact13.max_val;
 		ans[pos] = val;
 		compact13.assign(pos, val, 1);
 	}
@@ -76,14 +78,14 @@ int main ()
 	
 	for ( uint64_t i=0; i<twice; ++i ) {
 		int pos = rand()%compact13.max_pos;
-		uint16_t res = compact13.access(pos);
+		VAR res = compact13.access(pos);
 		assert(ans[pos] == res);	
 	}
 	std::cout << "access " << twice << " times, " << spent_time(stamp) << " seconds\n";
 	stamp = clock();
 	for ( uint64_t i=0; i<fourth; ++i ) {
 		int pos = rand()%compact13.max_pos;
-		int val = rand()%compact13.max_val;
+		uint64_t val = rand()%compact13.max_val;
 		ans[pos] = val;
 		compact13.assign(pos, val, 1);
 	}
@@ -91,7 +93,7 @@ int main ()
 	stamp = clock();
 	for ( uint64_t i=0; i<fourth; ++i ) {
 		int pos = rand()%compact13.max_pos;
-		uint16_t res = compact13.access(pos);
+		VAR res = compact13.access(pos);
 		assert(ans[pos] == res);	
 	}
 	std::cout << "access " << fourth << " times, " << spent_time(stamp) << " seconds\n";

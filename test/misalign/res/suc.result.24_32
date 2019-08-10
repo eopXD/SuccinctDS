@@ -1,0 +1,12 @@
+[b04705001@linux8 src]$ ./test.suc
+compression rate: 0.750004
+initialize: 1.68642 seconds
+mem_used: 3000016944
+*******************************************
+assign 100000000 times, 23.9542 seconds
+access 100000000 times, 14.3569 seconds
+assign 200000000 times, 43.289 seconds
+access 200000000 times, 28.7457 seconds
+assign 400000000 times, 84.4544 seconds
+access 400000000 times, 56.5962 seconds
+total: 253.083 seconds
