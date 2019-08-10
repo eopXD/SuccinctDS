@@ -136,7 +136,7 @@ struct misalign { // needed_bit_len < medium_bit_len
 		if ( blk_l == blk_r ) { // in same block
 			res = data[blk_l];
 			res <<= a;
-			res >>= b;
+			res >>= (a+b);
 			return (res);
 		}
 		else { // goes across 2 blocks
@@ -150,7 +150,7 @@ struct misalign { // needed_bit_len < medium_bit_len
 };
 int main ()
 {
-	srand(time(NULL));
+	srand(112358);
 	uint64_t allocate_size = 10000;
 	misalign<13, uint16_t, 16> compact13(allocate_size);
 	uint16_t *ans;
@@ -173,14 +173,13 @@ int main ()
 			compact13.assign(pos, val, 1);
 		}
 	}*/
-	std::cout << compact13.max_val << "QAQQQQ\n";
 	for ( int i=0; i<10000; ++i ) {
 		int pos = rand()%compact13.max_pos;
 		int val = rand()%compact13.max_val;
 		ans[pos] = val;
 		compact13.assign(pos, val, 1);
 		uint16_t res = compact13.access(pos);
-		std::cout << i << " " << pos << ": " << ans[pos] << " " << res << "\n";
+		//std::cout << i << " " << pos << ": " << ans[pos] << " " << res << "\n";
 		assert(ans[pos] == res);
 //		break;
 	}
