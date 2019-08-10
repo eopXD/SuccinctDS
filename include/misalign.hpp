@@ -7,32 +7,15 @@
 	\author Yueh-Ting Chen (eopXD)
 	\project with Professor Tsan-sheng Hsu
 */
+#ifndef EOPXD_MISALIGN_HPP
+#define EOPXD_MISALIGN_HPP
+
 // C99
 #include <stdint.h>
-#include <cassert>
-#include <cstdlib>
-#include <ctime>
 // C++
 #include <iostream>
 
-void line () {
-	std::cout << "===========================================\n";
-}
-void star_line () {
-	std::cout << "*******************************************\n";
-}
-
-void decimal_to_binary ( int length, uint64_t x ) {
-	int str[100] = {};
-	int now = 0;
-	while ( x > 0 ) {
-		str[now++] = x%2;
-		x /= 2;
-	}
-	for ( int i=length-1; i>=0; i-- ) {
-		std::cout << str[i];
-	} std::cout << "\n";
-}
+namespace eopxd {
 
 template<uint64_t needed_bit_len, class medium, uint64_t medium_bit_len> 
 struct misalign { // needed_bit_len < medium_bit_len
@@ -60,8 +43,8 @@ struct misalign { // needed_bit_len < medium_bit_len
 	*/
 
 	void init_ones () {
-		for ( int l=0; l<=medium_bit_len; ++l ) {
-			for ( int r=0; r<=medium_bit_len; ++r ) {
+		for ( UINT64 l=0; l<=medium_bit_len; ++l ) {
+			for ( UINT64 r=0; r<=medium_bit_len; ++r ) {
 				ones[l][r] = full;
 				if ( l+r < medium_bit_len ) {
 					ones[l][r] &= full>>l;
@@ -84,7 +67,7 @@ struct misalign { // needed_bit_len < medium_bit_len
 		}
 		data_len = (needed_bit_len*allocate_size+medium_bit_len-1)/medium_bit_len;
 		data = new VAR [data_len];
-		for ( int i=0; i<data_len; ++i ) { // all zeros filled in!
+		for ( UINT64 i=0; i<data_len; ++i ) { // all zeros filled in!
 			data[i] = 0;
 		}
 		diff = medium_bit_len - needed_bit_len;
@@ -148,41 +131,6 @@ struct misalign { // needed_bit_len < medium_bit_len
 		}
 	}
 };
-int main ()
-{
-	srand(112358);
-	uint64_t allocate_size = 10000;
-	misalign<13, uint16_t, 16> compact13(allocate_size);
-	uint16_t *ans;
-	ans = new uint16_t [allocate_size];
-/*	while ( 1 ) {
-		int op;
-		std::cout << "enter op (0: access, 1 assign): ";
-		std::cin >> op;
-		if ( op == 0 ) {
-			std::cout << "enter position to access: ";
-			int pos; 
-			std::cin >> pos;
-			uint16_t val = compact13.access(pos);
-			std::cout << "access: " << (uint64_t)val << "\n";
-		}
-		else {
-			std::cout << "enter position and value to assign: ";
-			int pos, val;
-			std::cin >> pos >> val;
-			compact13.assign(pos, val, 1);
-		}
-	}*/
-	for ( int i=0; i<10000; ++i ) {
-		int pos = rand()%compact13.max_pos;
-		int val = rand()%compact13.max_val;
-		ans[pos] = val;
-		compact13.assign(pos, val, 1);
-		uint16_t res = compact13.access(pos);
-		//std::cout << i << " " << pos << ": " << ans[pos] << " " << res << "\n";
-		assert(ans[pos] == res);
-//		break;
-	}
-	
-	return (0);
-}
+
+} // end namespace
+#endif
