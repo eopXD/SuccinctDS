@@ -16,7 +16,7 @@ using namespace eopxd;
 int main ()
 {
 	srand(112358);
-	uint64_t allocate_size = 10000;
+	uint64_t allocate_size = 10000000;
 	misalign<13, uint16_t, 16> compact13(allocate_size);
 	uint16_t *ans;
 	ans = new uint16_t [allocate_size];
@@ -38,6 +38,7 @@ int main ()
 			compact13.assign(pos, val, 1);
 		}
 	}*/
+	std::cout << "mem_used: " << compact13.mem_used << "\n";
 	for ( int i=0; i<20000; ++i ) {
 		int pos = rand()%compact13.max_pos;
 		int val = rand()%compact13.max_val;

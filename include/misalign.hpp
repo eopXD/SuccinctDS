@@ -54,7 +54,14 @@ struct misalign { // needed_bit_len < medium_bit_len
 			}
 		}
 	}
-
+	void account_mem () {
+		mem_used += sizeof(VAR)*data_len;
+		mem_used += sizeof(VAR*);
+		mem_used += sizeof(VAR)*3;
+		mem_used += sizeof(ones);
+		mem_used += sizeof(UINT64)*3;
+		std::cout << "compression rate: " << (double)mem_used/(sizeof(VAR)*(max_pos+1)) << "\n";
+	}
 	misalign () { // this shall not be called
 		std::cout << "you should not call me with no parameter lah\n";
 		std::cout << "ex: call misalign<7, uint8_t, 8> test(allocate_size);\n";
@@ -76,6 +83,9 @@ struct misalign { // needed_bit_len < medium_bit_len
 
 		max_pos = allocate_size-1;
 		max_val = (1ULL<<needed_bit_len)-1;
+
+		mem_used = 0;
+		account_mem();
 	}
 	// position start from zero
 	void assign ( UINT64 pos, VAR val, bool dirty ) { // if dirty, cleans the space first
