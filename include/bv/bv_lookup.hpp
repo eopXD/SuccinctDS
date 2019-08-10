@@ -199,8 +199,6 @@ struct bv_lookup {
 			//std::cout << "[bv_lookup]: construct lookup table\n";
 			genlookup(&mem_used);
 		}
-		//pop = new INTPOP [(len+blk_size-1)/blk_size];
-		//perm = new INTPERM [(len+blk_size-1)/blk_size];
 		superpop = new INTLEN [(len+popblk_size-1)/popblk_size];
 
 		compact_pop = new misalign<4, INTPOP, 8>((len+blk_size-1)/blk_size);
@@ -216,8 +214,6 @@ struct bv_lookup {
 			if ( i%blk_size == 0 ) {
 				INTPOP _pop = get_pop(bitstring);
 				INTPERM _perm = get_perm(bitstring);
-				//pop[blkcnt] = _pop;
-				//perm[blkcnt] = _perm;
 
 				compact_pop->assign(blkcnt, _pop, 0);
 				compact_perm->assign(blkcnt, _perm, 0);
@@ -236,8 +232,6 @@ struct bv_lookup {
 			bitstring = bitstring<<(blk_size-(len%blk_size));
 			INTPOP _pop = get_pop(bitstring);
 			INTPERM _perm = get_perm(bitstring);
-			//pop[blkcnt] = _pop;
-			//perm[blkcnt] = _perm;
 
 			compact_pop->assign(blkcnt, _pop, 0);
 			compact_perm->assign(blkcnt, _perm, 0);
@@ -255,16 +249,9 @@ struct bv_lookup {
 		rank_support = true;
 		kill_bitvec(); // the real bitvec is no longer needed (to save space)
 		
-		//mem_used += sizeof(INTPOP)*((len+blk_size-1)/blk_size);
-		//mem_used += sizeof(INTPERM)*((len+blk_size-1)/blk_size);
 		mem_used += compact_pop->mem_used;
 		mem_used += compact_perm->mem_used;
 		mem_used += sizeof(INTLEN)*((len+popblk_size-1)/popblk_size);
-		
-		//std::cout << "pop: " << sizeof(INTPOP)*((len+blk_size-1)/blk_size) << "\n";
- 		//std::cout << "compact_pop: " << compact_pop->mem_used << "\n";
-		//std::cout << "perm: " << sizeof(INTPERM)*((len+blk_size-1)/blk_size) << "\n";
- 		//std::cout << "compact_perm: " << compact_perm->mem_used << "\n";
 		
 		//std::cout<< "support_rank\n";
 		//std::cout << "pop: " << sizeof(INTPOP)*((len+blk_size-1)/blk_size) << "\n";
@@ -278,10 +265,8 @@ struct bv_lookup {
 		}
 		else if ( rank_support ) {
 			INTLEN blk_num = p/blk_size;
-			//INTPERM bitstring = get_bitstring(pop[blk_num], perm[blk_num]);
 			INTPERM bitstring = 
 				get_bitstring(compact_pop->access(blk_num), compact_perm->access(blk_num));
-			//assert(bitstring == _test);
 			return ((bitstring>>(blk_size-(p%(INTLEN)blk_size)-1))&1);
 		}
 		else {
@@ -295,19 +280,12 @@ struct bv_lookup {
 			INTLEN blk_num = p/blk_size;
 			INTLEN superblk_num = blk_num/superblk_size;
 			INTLEN res = superpop[superblk_num];
-			//INTLEN _res = superpop[superblk_num];
 			for ( INTLEN i=superblk_num*superblk_size; i<blk_num; ++i ) {
-				//res += pop[i];
 				res += compact_pop->access(i);
 			}
-			//assert(res == _res);
-			//INTPERM bitstring = get_bitstring(pop[blk_num], perm[blk_num]);
 			INTPERM bitstring = 
 				get_bitstring(compact_pop->access(blk_num), compact_perm->access(blk_num));
-			//assert(bitstring == _test);
 			res += __builtin_popcount(bitstring>>(blk_size-(p%blk_size)));
-			//_res += __builtin_popcount(_test>>(blk_size-(p%blk_size)));
-			//assert(res == _res);
 			return (c==1) ? (res) : (p-res);
 		}
 		else {
