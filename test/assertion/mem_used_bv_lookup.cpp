@@ -26,7 +26,7 @@ int main ()
 	srand(112358);
 //	std::cout << "test string: " << sizeof(test_string) << "\n"; 
 /* test bitstring mem_used*/
-	int n = 100000, m = 50000;
+	int n = 100000000, m = 50000;
 	bv_lookup *bv_ptr = new bv_lookup(n);
 	bv_lookup bv_var(n);
 	bool *ans = new bool [n];
@@ -41,10 +41,12 @@ int main ()
 	std::cout << "bv_ptr: " << bv_ptr->mem_used << "\n\n";
 	bv_ptr->support_rank();
 	std::cout << "bv_ptr: " << bv_ptr->mem_used << "\n";
+	std::cout << "compression rate: " << (double)bv_ptr->mem_used/(n/8) << "\n";
 	std::cout << "=============================================\n";
 	std::cout << "bv_var: " << bv_var.mem_used << "\n\n";
 	bv_var.support_rank();
 	std::cout << "bv_var: " << bv_var.mem_used << "\n";
+	std::cout << "compression rate: " << (double)bv_var.mem_used/(n/8) << "\n";
 
 	return (0);	
 }

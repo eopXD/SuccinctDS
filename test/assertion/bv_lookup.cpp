@@ -16,22 +16,13 @@
 using namespace eopxd;
 typedef uint64_t INT;
 
-INT naive_rank ( bool *ans, int pos, int c ) {
-    int res = 0;
-    for ( int i=0; i<pos; ++i ) {
-        if ( ans[i]==c ) {
-            ++res;
-        }		
-    }
-    return (res);
-}
-
 int main ()
 {
-	int n = 100000, m = 50000;
+	int n = 1000000, m = 500;
 	bv_lookup *bv_ptr = new bv_lookup(n);
 	bv_lookup bv_var(n);
 	bool *ans = new bool [n];
+	INT *naive_rank = new INT [n+1];
 	for ( int i=0; i<n; ++i ) {
 		bv_ptr->bitvec[i] = bv_var.bitvec[i] = ans[i] = 0;
 	}
@@ -39,10 +30,13 @@ int main ()
 		int x = rand()%n;
 		bv_ptr->bitvec[x] = bv_var.bitvec[x] = ans[x] = 1;
 	}
-	//for ( int i=0; i<n; ++ i ) printf("%d", ans[i]); puts("");		
+	//for ( int i=0; i<n; ++ i ) printf("%d", ans[i]); puts("");
+	naive_rank[0] = 0;
 	for ( int i=0; i<n; ++i ) {
+		naive_rank[i+1] = naive_rank[i]+ans[i];
 		assert(bv_ptr->bitvec[i] == ans[i]);
 		assert(bv_var.bitvec[i] == ans[i]);
+		
 	}
 
 	bv_ptr->support_rank();
@@ -54,12 +48,12 @@ int main ()
 	//}
 	for ( int i=0; i<n; ++i ) {
 		assert(bv_ptr->access(i) == ans[i]);
-		assert(bv_ptr->rank(i, 0) == naive_rank(ans, i, 0));
-		assert(bv_ptr->rank(i, 1) == naive_rank(ans, i, 1));
+		assert(bv_ptr->rank(i, 0) == (i-naive_rank[i]));
+		assert(bv_ptr->rank(i, 1) == naive_rank[i]);
 
 		assert(bv_var.access(i) == ans[i]);
-		assert(bv_var.rank(i, 0) == naive_rank(ans, i, 0));
-		assert(bv_var.rank(i, 1) == naive_rank(ans, i, 1));
+		assert(bv_var.rank(i, 0) == (i-naive_rank[i]));
+		assert(bv_var.rank(i, 1) == naive_rank[i]);
 	}
 	exit(0);
 }

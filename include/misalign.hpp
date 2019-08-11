@@ -60,7 +60,7 @@ struct misalign { // needed_bit_len < medium_bit_len
 		mem_used += sizeof(VAR)*3;
 		mem_used += sizeof(ones);
 		mem_used += sizeof(UINT64)*3;
-		std::cout << "compression rate: " << (double)mem_used/(sizeof(VAR)*(max_pos+1)) << "\n";
+		//std::cout << "compression rate: " << (double)mem_used/(sizeof(VAR)*(max_pos+1)) << "\n";
 	}
 	misalign () { // this shall not be called
 		std::cout << "you should not call me with no parameter lah\n";

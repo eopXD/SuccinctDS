@@ -9,6 +9,9 @@
 #ifndef EOPXD_BITVECTOR_HPP
 #define EOPXD_BITVECTOR_HPP
 
+// for better compression rate
+#include "misalign.hpp"
+
 #include "bv/bv_naive.hpp"
 #include "bv/bv_lookup.hpp"
 

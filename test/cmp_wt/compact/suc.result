@@ -1,0 +1,14 @@
+**************************************************
+gen_code: 0.000685 seconds
+fill_data: 101.75 seconds
+total: 107.918 seconds
+initialize: 107.919 seconds
+naive rank: 20.6075 seconds
+support rank: 38.7522 seconds
+access 100000000 times, 441.291 seconds
+access 200000000 times, 781.556 seconds
+access 400000000 times, 1567.29 seconds
+rank 100000000 times, 402.87 seconds
+rank 200000000 times, 832.547 seconds
+rank 400000000 times, 1661.59 seconds
+total: 5854.42 seconds
