@@ -61,14 +61,24 @@ int main ()
 				c1 >>= 3; 
 				unsigned char decode0 = (c0<<3)+(c1>>2); // 6 bits with leading zeros
 				unsigned char decode1 = (c0<<5)+c1; // 8 bits (6+2)
-				
+				/*decimal_to_binary(8, c0);
+				decimal_to_binary(8, c1);
+				star_line();
+				decimal_to_binary(8, decode0);
+				decimal_to_binary(8, decode1);
+				line(); line();*/
+					
 				write_buf[0][now] = decode0;
 				write_buf[1][now++] = decode1;
+				//break;
 			}	
+			//break;
 			for ( int i=0; i<2; ++i ) {
 				write(write_fd[i], write_buf[i], now);
 			}
+			//break;
 		} 
+		//break;
 		std::cout << "complete part " << i << "\n";
 		std::cout << "time: " << spent_time(stamp) << " seconds\n";
 		stamp = clock();
