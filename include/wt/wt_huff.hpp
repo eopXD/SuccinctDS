@@ -289,7 +289,26 @@ struct wt_huff {
 		std::cout << "total: " << spent_time(start) << " seconds\n";
 		account_mem();	
 	}
+	
+	void delete_tree ( NODE* now ) {
+		if ( now->child[0] != nullptr ) {
+			delete_tree(now->child[0]);
+		}
+		if ( now->child[1] != nullptr ) {
+			delete_tree(now->child[1]);
+		}
+		delete now;
+	}
 
+	// destructor
+	~wt_huff () {
+		for ( int i=0; i<65537; ++i ) {
+			if ( huffcode[i] != nullptr ) {
+				delete [] huffcode[i];
+			}
+		}	
+		delete_tree(root);
+	}
 }; // end struct wt_huff
 
 } // end namespace

@@ -124,8 +124,6 @@ struct bv_lookup {
 	bool *bitvec;
 	bool rank_support;
 	INTLEN blkcnt, superblkcnt;
-	INTPOP *pop;
-	INTPERM *perm;
 	INTLEN *superpop;
 	
 	misalign<4, INTPOP, 8> *compact_pop;
@@ -135,8 +133,8 @@ struct bv_lookup {
 
 	void account_mem () { // 65 Byte
 		mem_used += sizeof(bool*); // 8 Byte
-		mem_used += sizeof(INTPOP*); // 8 Byte
-		mem_used += sizeof(INTPERM*); // 8 Byte
+		mem_used += sizeof(misalign<4, INTPOP, 8>*); // 8 Byte
+		mem_used += sizeof(misalign<13, INTPERM, 16>*); // 8 Byte
 		mem_used += sizeof(INTLEN*); // 8 Byte
 		mem_used += sizeof(bool); // 1 Byte (sizeof(bool) == sizeof(char))
 		mem_used += sizeof(INTLEN)*4; // 8 Byte * 4
@@ -148,8 +146,8 @@ struct bv_lookup {
 
 		rank_support = false;
 		len = blkcnt = superblkcnt = 0;
-		bitvec = nullptr, pop = nullptr, perm = nullptr, superpop = nullptr;
-		
+		bitvec = nullptr;		
+		compact_pop = nullptr, compact_perm = nullptr, superpop = nullptr;
 		account_mem();
 	}
 
@@ -161,7 +159,7 @@ struct bv_lookup {
 		len = _len;
 		bitvec = new bool [len];
 		blkcnt = superblkcnt = 0;
-		pop = nullptr, perm = nullptr, superpop = nullptr;
+		compact_pop = nullptr, compact_perm = nullptr, superpop = nullptr;
 		
 		mem_used += sizeof(bool)*len;
 		account_mem();
@@ -169,18 +167,19 @@ struct bv_lookup {
 
 	// destructor
 	~bv_lookup () {
-		if ( bitvec ) {
+		if ( bitvec != nullptr ) {
 			delete[] bitvec;
 		}
-		if ( pop ) {
-			delete[] pop;
+		if ( compact_pop != nullptr ) {
+			delete compact_pop;
 		}
-		if ( perm ) {
-			delete[] perm;
+		if ( compact_perm != nullptr ) {
+			delete compact_perm;
 		}
-		if ( superpop ) {
+		if ( superpop != nullptr ) {
 			delete[] superpop;
 		}
+
 	}
 
 	// call this to delete original bitstring
@@ -295,17 +294,10 @@ struct bv_lookup {
 	}
 
 	void display_rank () {
-		if ( pop == nullptr ) {
-			std::cout << "[bv_lookup]: please call support_rank()\n";
-			return ;
-		}
 		std::cout << "[bv_lookup]:\n";
 		std::cout << "\tlength: " << len << "\n";
 		std::cout << "\tbasic blocks: " << blkcnt << "\n";
 		std::cout << "\tsuper blocks: " << superblkcnt << "\n\t";
-		for ( INTLEN i=0; i<blkcnt; ++i ) {
-			std::cout << "(" << unsigned(pop[i]) << "," << perm[i] << "), ";
-		}
 		std::cout << "\n==================================================\n";
 	}
 	void display_bitmap () {
