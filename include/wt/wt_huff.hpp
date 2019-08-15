@@ -117,7 +117,9 @@ struct wt_huff {
 		//std::cout << "vector<PII> freq: " << sizeof(VII)+(sizeof(PII)*freq.size()) << "\n";
 		std::cout << "[huff_wt] empirical frequency\n";
 		for ( INT i=0; i<freq.size(); ++i ) {
-			std::cout << "\t" << freq[i].second << ":" << freq[i].first << "\n";
+			std::cout << "\t";
+			decimal_to_binary(bpa*8, freq[i].second);
+			std::cout << ":" << freq[i].first << "\n";
 			NODE *a = new NODE(freq[i].second, bpa, freq[i].first);
 			//std::cout << "leaf node: " << a->mem_used << "\n";	
 			mem_used += a->mem_used; // memory of node, leaf node no  bitvec
@@ -181,7 +183,9 @@ struct wt_huff {
 		for ( int i=0; i<65537; ++i ) {
 			if ( alphabet[i] != -1 ) {
 				//decode(i);
-				std::cout << "\t" << i << ": ";
+				std::cout << "\t";
+				decimal_to_binary(bpa*8, i);
+				std::cout << ": ";
 				for ( int j=0; j<huff_len[i]; ++j ) {
 					std::cout << huffcode[i][j];
 				}
