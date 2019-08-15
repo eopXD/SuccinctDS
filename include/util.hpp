@@ -40,7 +40,7 @@ void decimal_to_binary ( int length, uint64_t x ) {
 	}
 	for ( int i=length-1; i>=0; i-- ) {
 		std::cout << str[i];
-	} std::cout << "\n";
+	} //std::cout << "\n";
 }
 
 } // end namespace
