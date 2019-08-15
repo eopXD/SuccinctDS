@@ -90,6 +90,11 @@ struct wt {
 		account_mem();
 	}
 
+	// destructor
+	~wt () {
+		delete tree;
+	}
+
 /* Check if the node is a leaf node (only leaf nodes)*/
 	bool isLeaf ( NODE *now ) { 
 		return (now->child[0] == nullptr and now->child[1] == nullptr); 

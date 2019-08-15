@@ -67,6 +67,7 @@ struct misalign { // needed_bit_len < medium_bit_len
 		std::cout << "ex: call misalign<7, uint8_t, 8> test(allocate_size);\n";
 		exit(1);
 	}
+	// main constructor
 	misalign ( UINT64 allocate_size ) {
 		if ( needed_bit_len > medium_bit_len ) {
 			std::cout << "needed_bit_len needs to be smaller than medium_bit_len\n";
@@ -87,6 +88,13 @@ struct misalign { // needed_bit_len < medium_bit_len
 		mem_used = 0;
 		account_mem();
 	}
+	// destructor
+	~misalign () {
+		if ( data != nullptr ) {
+			delete [] data;
+		}
+	}
+	
 	// position start from zero
 	void assign ( UINT64 pos, VAR val, bool dirty ) { // if dirty, cleans the space first
 		if ( pos > max_pos ) {

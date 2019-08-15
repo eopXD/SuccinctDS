@@ -73,8 +73,8 @@ struct wt_node {
 		mama = child[0] = child[1] = nullptr;
 		len = _len, bpa = _bpa;
 		blk_hash = _blk_hash;
+		bitmap = nullptr; // don't need bitmap
 		decode(_blk_hash);
-
 		account_mem();
 	}
 
@@ -90,6 +90,16 @@ struct wt_node {
 
 		mem_used += bitmap->mem_used;
 		account_mem();
+	}
+
+	// destructor 
+	~wt_node () {
+		if ( blk != nullptr ) {
+			delete [] blk;
+		}	
+		if ( bitmap != nullptr ) {
+			delete bitmap;		
+		} 
 	}
 
 	void support_rank () {

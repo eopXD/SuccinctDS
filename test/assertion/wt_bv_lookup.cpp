@@ -75,7 +75,9 @@ int main ()
  		}
  	}
 	std::cout << "pass rank assertion\n";
- 	exit(0);
+ 	
+	delete wt_ptr;
+	exit(0);
 }
 /*
 Mystrerious error that occasionally happens.

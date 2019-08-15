@@ -8,6 +8,13 @@
 #ifndef EOPXD_UTIL_HPP
 #define EOPXD_UTIL_HPP
 
+// C99
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdint.h>
+// C++
 #include <ctime>
 #include <cmath>
 #include <fstream>
@@ -40,7 +47,13 @@ void decimal_to_binary ( int length, uint64_t x ) {
 	}
 	for ( int i=length-1; i>=0; i-- ) {
 		std::cout << str[i];
-	} std::cout << "\n";
+	} //std::cout << "\n";
+}
+
+uint64_t get_filesize ( char *filename ) {
+	struct stat st;
+	stat(filename, &st);
+	return (st.st_size);
 }
 
 } // end namespace
