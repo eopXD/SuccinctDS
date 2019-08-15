@@ -2,6 +2,8 @@ C=gcc -std=C99 -O2
 CPLUSPLUS=g++ -std=c++17 -O3 -Wall
 SUCCINCT=-I../../
 
+concat:
+	$(CPLUSPLUS) concat.cpp -o test.concat
 check_bit_segment:
 	$(CPLUSPLUS) $(SUCCINCT) check_bit_segments.cpp -o test.check_bit_segments 
 decode:
