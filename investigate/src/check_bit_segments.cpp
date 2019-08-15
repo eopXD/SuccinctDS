@@ -6,6 +6,7 @@
 #include <stdint.h>
 // C++
 #include <iostream>
+#include <cmath>
 #include <iomanip>
 #include <map>
 // eopxd
@@ -26,7 +27,7 @@ int main ()
 
 	map<UINT64, UINT64> mp;
 	UINT64 blk;
-	int progress = 0;
+	UINT64 progress = 0;
 	int buf_size = 65536;
 	UCHAR buf[buf_size];
 	int read_size, fd;
@@ -37,6 +38,7 @@ int main ()
 			cout << "open file fail\n";
 			exit(1);
 		}
+		progress = 0;
 		int l, r;
 		cout << "0~63, l = starting bit, r = ending bit, inclusive\n";
 		cout << "insert l r (seperate with space): ";
@@ -70,6 +72,14 @@ int main ()
 			total_blk += it->second;
 		}
 		std::cout << "total blocks: " << total_blk << "\n";
+		double h0 = 0;
+		for ( map<UINT64, UINT64>::iterator it=mp.begin(); it!=mp.end(); ++it ) {
+			if ( it->second != 0 ) {
+				double p = (double)it->second/total_blk;
+				h0 += p*log2(1.0/p);
+			}
+		}
+		std::cout << "H0 entropy: " << h0 << "\n";
 		close(fd);
 	}
 	return (0);
