@@ -19,7 +19,7 @@ this feature is needed if the data cannot fit into memory.
 
 
 //*******************************	
-//** TODO: SIZE CALCULATION    **
+//** DONE: SIZE CALCULATION    **
 //*******************************
 //calculation of the data structure is neccessary
 

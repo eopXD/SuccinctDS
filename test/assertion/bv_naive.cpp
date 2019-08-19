@@ -5,26 +5,25 @@
 	\project with Professor Tsan-sheng Hsu
 */
 
-#include <cstdio>
+#include <iostream>
 #include <stdint.h>
 #include <cassert>
 #include <random>
-#include <iostream>
 
 #include "include/bv.hpp"
 
 using namespace eopxd;
-typedef uint64_t INT;
-typedef bv_lookup BV;
+typedef uint64_t UINT64;
+typedef uint8_t UINT8;
+typedef bv_naive BV;
 int main ()
 {
-	int n = 100000000, m = 500;
-	
+	int n = 10000, m = 500;
 	BV *bv_ptr = new BV(n);
 	bool *ans = new bool [n];
-	INT *naive_rank = new INT [n+1];
+	UINT64 *naive_rank = new UINT64 [n+1];
 	for ( int i=0; i<n; ++i ) {
-		bv_ptr->assign(i, 0);		
+		bv_ptr->assign(i, 0);
 		ans[i] = 0;
 	}
 	for ( int i=0; i<m; ++i ) {
@@ -37,20 +36,20 @@ int main ()
 	for ( int i=0; i<n; ++i ) {
 		naive_rank[i+1] = naive_rank[i]+ans[i];
 		assert(bv_ptr->access(i) == ans[i]);
-		
 	}
 
-	std::cout << "before support_rank()\n";
-	std::cout << "bv_ptr memory: " << bv_ptr->mem_used << "\n";
 	bv_ptr->support_rank();
-	std::cout << "after support_rank()\n";
-	std::cout << "bv_ptr memory: " << bv_ptr->mem_used << "\n";
+	//bv_ptr->display_rank();
 	
+	//for ( int i=0; i<15; ++i ) {
+	//	printf("%2d: %d, %d\n", i, vec->access(i), ans[i]);
+	//}
 	for ( int i=0; i<n; ++i ) {
 		assert(bv_ptr->access(i) == ans[i]);
 		assert(bv_ptr->rank(i, 0) == (i-naive_rank[i]));
 		assert(bv_ptr->rank(i, 1) == naive_rank[i]);
 	}
-	std::cout << "pass assertion (access/rank)\n";
+	std::cout << "mem_used: " << bv_ptr->mem_used << "\n";
+	std::cout << "complete assertion\n";
 	exit(0);
 }

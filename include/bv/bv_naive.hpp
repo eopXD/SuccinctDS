@@ -7,6 +7,8 @@
 	\project with Professor Tsan-sheng Hsu
 */
 
+// try misalign.hpp on naive bitvector
+
 #ifndef EOPXD_BITVECTOR_NAIVE_HPP
 #define EOPXD_BITVECTOR_NAIVE_HPP
 
@@ -14,67 +16,73 @@
 #include <stdint.h>
 // C++
 #include <iostream>
+#include <cassert>
 
 //! namespace by eopXD
 namespace eopxd {
 
 struct bv_naive {
-	typedef uint64_t INT;
+	typedef uint64_t UINT64;
+	typedef uint8_t UINT8;
+	typedef misalign<1, UINT8, 8> BITVEC;
 
-	INT len;
-	bool *bitvec;
+	UINT64 len;
+	BITVEC *compact_bitvec; 
 
-	INT mem_used;
+	UINT64 mem_used;
 
 	void account_mem () {
-		mem_used += sizeof(bool*);
-		mem_used += sizeof(INT)*2;
+		mem_used += sizeof(UINT64)*2;
+		mem_used += sizeof(BITVEC*); 
+		if ( compact_bitvec ) {
+			mem_used += compact_bitvec->mem_used;
+		}
 	}
 
-	// default constructor
+	// default constructor (shall not be called)
 	bv_naive () {
-		mem_used = 0;
-
-		bitvec = nullptr;
-
-		account_mem();
+		std::cout << "usage: bv_naive(allocated_length)\n";
+		exit(1);
 	}
 
 	// main constructor
-	bv_naive ( INT _len ) {
+	bv_naive ( UINT64 _len ) {
 		mem_used = 0;
-
 		len = _len;
-		bitvec = new bool [len];
-	
-		mem_used += sizeof(bool)*len;
+		compact_bitvec = new BITVEC(len);
 		account_mem();
 	}
 	
 	// destructor
 	~bv_naive () {
-		if ( bitvec ) delete[] bitvec;
-		bitvec = nullptr;
+		if ( compact_bitvec ) {
+			delete compact_bitvec;
+		}
+		compact_bitvec = nullptr;
+	}
+	void assign ( UINT64 p, bool v ) {
+		compact_bitvec->assign(p, v, 1);
+	}
+	bool access ( UINT64 p ) { 
+		return (compact_bitvec->access(p));
 	}
 
-	bool access ( INT p ) { return (bitvec[p]); }
-
-	INT rank ( INT p, bool c ) {
-		INT o = 0;
-		for ( INT i=0; i<p; ++i ) {
-			if ( bitvec[i] == c ) {
+	UINT64 rank ( UINT64 p, bool c ) {
+		UINT64 o = 0;
+		for ( UINT64 i=0; i<p; ++i ) {
+			if ( compact_bitvec->access(i) == c ) {
 				++o;
 			}
 		}
 		return (o);
 	}
-	INT select ( INT o, bool c ) { // 0th occurence is the first occurence
+	UINT64 select ( UINT64 o, bool c ) { // 0th occurence is the first occurence
 		if ( o < 0 ) {
 			return (0);
 		}
-		INT cnt = 0;
-		for ( INT p=0; p<len; ++p ) {
-			cnt += (bitvec[p] == c);
+		UINT64 cnt = 0;
+		for ( UINT64 p=0; p<len; ++p ) {
+			cnt += (compact_bitvec->access(p) == c);
 			if ( (cnt-1) == o ) {
 				return (p);
 			}
@@ -88,8 +96,8 @@ struct bv_naive {
 	void display_bitmap () {
 		std::cout << "Length: " << len << "\n";
 		std::cout << "Bitmap: ";
-		for ( INT i=0; i<len; ++i ) {
-			std::cout << bitvec[i];
+		for ( UINT64 i=0; i<len; ++i ) {
+			std::cout << compact_bitvec->access(i);
 		}
 		std::cout << "\n";
 	}

@@ -9,7 +9,7 @@
 */
 
 //*******************************	
-//** TODO: SIZE CALCULATION    **
+//** DONE: SIZE CALCULATION    **
 //*******************************
 //calculation of the data structure is neccessary
 
@@ -200,7 +200,8 @@ struct wt_huff {
 		if ( now->child[0] == nullptr and now->child[1] == nullptr ) {
 			return ;
 		}
-		now->bitmap->bitvec[now->bitmapcnt++] = huffcode[blk_hash][lv];
+		now->bitmap->assign(now->bitmapcnt, huffcode[blk_hash][lv]);
+		++now->bitmapcnt;
 		fill_bit(now->child[huffcode[blk_hash][lv]], blk_hash, lv+1);
 	}
 	void fill_data ( char filename[], int name_len, bool dummy ) {

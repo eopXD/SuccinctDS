@@ -19,38 +19,38 @@ namespace eopxd {
 
 template<class bitvector_type>
 struct wt_node {
-	typedef uint64_t INT;
-	typedef std::string STR;
+	typedef uint64_t UINT64;
+	typedef unsigned char UCHAR;
 	typedef bitvector_type BV;
 
 	int bpa;
 	wt_node *mama;
 	wt_node *child[2]; // [0] = left, [1] = right (to avoid conditional branch)
 	BV *bitmap;
-	INT bitmapcnt; // for filling bit 1 by 1 ( check huff_wt->fill_bit() )
-	INT len;
+	UINT64 bitmapcnt; // for filling bit 1 by 1 ( check huff_wt->fill_bit() )
+	UINT64 len;
 	int blk_hash;
-	unsigned char *blk;
+	UCHAR *blk;
 
-	INT mem_used;
+	UINT64 mem_used;
 
 	void account_mem () { // 72 B 
 		mem_used += sizeof(wt_node*)*3; // 24 B
 		mem_used += sizeof(BV*); // 8 B
-		mem_used += sizeof(unsigned char*); // 8 B
-		mem_used += sizeof(INT)*3; // 24B
+		mem_used += sizeof(UCHAR*); // 8 B
+		mem_used += sizeof(UINT64)*3; // 24B
 		mem_used += sizeof(int)*2; // 8 B
 	}
 
 	void decode ( int _blk_hash ) { // "bpa+1" Byte for alphabet of leaf node
-		blk = new unsigned char [bpa+1];
+		blk = new UCHAR [bpa+1];
 		blk[bpa] = '\0';
 		for ( int i=bpa-1; i>=0; i-- ) {
 			blk[i] = _blk_hash%256;
 			_blk_hash >>= 8;
 		}
 	
-		mem_used += sizeof(unsigned char)*(bpa+1);
+		mem_used += sizeof(UCHAR)*(bpa+1);
 	}
 	// default constructor (usually not called)
 	wt_node () {
@@ -67,7 +67,7 @@ struct wt_node {
 	}
 
 	// leaf constructor (leaf nodes don't need bitmap)
-	wt_node ( int _blk_hash, int _bpa, INT _len ) {
+	wt_node ( int _blk_hash, int _bpa, UINT64 _len ) {
 		mem_used = 0;
 
 		mama = child[0] = child[1] = nullptr;

@@ -15,7 +15,7 @@
 #include "include/wt.hpp"
 using namespace eopxd;
 
-typedef uint64_t INT;
+typedef uint64_t UINT64;
 typedef unsigned char UCHAR;
 
 UCHAR test_string[11] = "aaaaaaaabb"; // a*8, b*2
@@ -31,22 +31,31 @@ int main ()
 	bv_lookup bv_var(n);
 	bool *ans = new bool [n];
 	for ( int i=0; i<n; ++i ) {
-		bv_ptr->bitvec[i] = bv_var.bitvec[i] = ans[i] = 0;
+		bv_ptr->assign(i, 0);
+		bv_var.assign(i, 0);
+		ans[i] = 0;
 	}
 	for ( int i=0; i<m; ++i ) {
 		int x = rand()%n;
-		bv_ptr->bitvec[x] = bv_var.bitvec[x] = ans[x] = 1;
+		bv_ptr->assign(x, 1);
+		bv_var.assign(x, 1);
+		ans[x] = 1;
 	}
+
+	UINT64 before_support;
+	before_support = bv_ptr->mem_used;
 
 	std::cout << "bv_ptr: " << bv_ptr->mem_used << "\n\n";
 	bv_ptr->support_rank();
 	std::cout << "bv_ptr: " << bv_ptr->mem_used << "\n";
-	std::cout << "compression rate: " << (double)bv_ptr->mem_used/(n/8) << "\n";
+	std::cout << "compression rate: " << (double)bv_ptr->mem_used/before_support << "\n";
 	std::cout << "=============================================\n";
+	
+	before_support = bv_var.mem_used;
 	std::cout << "bv_var: " << bv_var.mem_used << "\n\n";
 	bv_var.support_rank();
 	std::cout << "bv_var: " << bv_var.mem_used << "\n";
-	std::cout << "compression rate: " << (double)bv_var.mem_used/(n/8) << "\n";
+	std::cout << "compression rate: " << (double)bv_var.mem_used/before_support << "\n";
 
 	return (0);	
 }
