@@ -41,7 +41,7 @@ struct bv_naive {
 
 	// default constructor (shall not be called)
 	bv_naive () {
-		std::cout << "should create bv_naive with parameters inside\n";
+		std::cout << "usage: bv_naive(allocated_length)\n";
 		exit(1);
 	}
 
