@@ -18,7 +18,9 @@ using namespace eopxd;
 typedef uint64_t UINT64;
 typedef unsigned char UCHAR;
 
-UCHAR test_string[10] = "aaaabbaac";
+UCHAR test_string[500] = "YOOOO every one, this is eopXD! glad u be checking \
+through these assertion codes to know that correctness is assured in the best \
+standard";
 int main ()
 {
 	UINT64 n = strlen((char*)test_string);
@@ -27,14 +29,19 @@ int main ()
 		new wt<wt_huff<bv_lookup>, bv_lookup>(test_string, n, bpa);  		
 	
 	UINT64 before_support;
-	
-	std::cout << "before support_rank()\n";
+
+	std::cout << "tree: " << wt_ptr->tree->mem_used << "\n";
+	std::cout << "root: " << wt_ptr->tree->root->mem_used << "\n";
+	std::cout << "root->bv: " << wt_ptr->tree->root->bitmap->mem_used << "\n";
+	std::cout << "root->bv->compact_bv: " << wt_ptr->tree->root->bitmap->bv->mem_used << "\n";
+
+	std::cout << "\nbefore support_rank()\n";
 	std::cout << "memory_used: " << wt_ptr->mem_used << "\n";
 	before_support = wt_ptr->mem_used;
 
 	wt_ptr->support_rank();
 	
-	std::cout << "after support_rank()\n";
+	std::cout << "\nafter support_rank()\n";
 	std::cout << "memory_used: " << wt_ptr->mem_used << "\n";
 
 	std::cout << "\nratio: " << (double)wt_ptr->mem_used/before_support << "\n";
