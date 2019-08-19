@@ -1,7 +1,7 @@
 // Copyright (C) 2019 Yueh-Ting Chen (eopXD)
 /*! \file bitvector.hpp
 	\brief bitvector.hpp includes all bitvector implementations.
-	ation can be specified.
+	init_bv_lookup() shall be called before using 
 	\author Yueh-Ting Chen (eopXD)
 	\project with Professor Tsan-sheng Hsu
 */
@@ -14,5 +14,13 @@
 
 #include "bv/bv_naive.hpp"
 #include "bv/bv_lookup.hpp"
+
+namespace eopxd {
+
+void init_bv_lookup () { // generate lookup table for rrr bv
+	genlookup();
+}
+
+} // end namespace
 
 #endif
