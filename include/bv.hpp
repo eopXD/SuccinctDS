@@ -17,10 +17,6 @@
 
 namespace eopxd {
 
-void init_bv_lookup () { // generate lookup table for rrr bv
-	genlookup();
-}
-
 } // end namespace
 
 #endif

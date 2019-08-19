@@ -20,8 +20,6 @@ int main ()
 {
 	int n = 100000000, m = 500;
 	
-	init_bv_lookup();
-	
 	BV *bv_ptr = new BV(n);
 	bool *ans = new bool [n];
 	INT *naive_rank = new INT [n+1];
