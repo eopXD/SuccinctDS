@@ -453,11 +453,14 @@ Now the amount of overhead is correct to the theoretical calcualtions.
 ## Experiment Results - 45-52 bit
 
 ```
+input filename (absolute path): /tmp2/b04705001/4x5/decompressed/concat_all.decode1
+
+
 file: /tmp2/b04705001/4x5/decompressed/concat_all.decode1
 filesize: 942833664 0.878082G
 [wt] stream mode
 [wt_huff] stream mode constructor activated
-get_freq: 1.71171 seconds
+get_freq: 2.36262 seconds
 [huff_wt] empirical frequency
 	00000010:615189527
 	00000000:299259214
@@ -470,7 +473,7 @@ get_freq: 1.71171 seconds
 	00010001:2752125
 	00001101:1793579
 [huff_wt] node merge...
-construct_tree: 8.8e-05 seconds
+construct_tree: 0.170734 seconds
 [wt_huff] Huffman code generated
 	00000000: 10
 	00000001: 1111
@@ -484,19 +487,20 @@ construct_tree: 8.8e-05 seconds
 	00011101: 11010
 
 **************************************************
-gen_code: 7.8e-05 seconds
-fill_data: 5.09127 seconds
-total: 6.80319 seconds
+gen_code: 8.4e-05 seconds
+fill_data: 7.29609 seconds
+total: 9.82961 seconds
 
 
 wavelet tree:
-mem_used: :1355436937 1.26235G
-ratio: 1.43762
-generate lookup table complete
+mem_used: :170387519 0.158686G
+ratio: 0.180719
 
 after support_rank():
-mem_used: :198844522 0.185188G
-ratio: 0.210901
+mem_used: :198680337 0.185035G
+ratio: 0.210727
+
+after rank: 1.16605
 ```
 
 Now the amount of overhead is correct to the theoretical calcualtions.
