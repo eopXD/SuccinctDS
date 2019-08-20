@@ -24,6 +24,7 @@ int main ()
 	char filename[100];
 	int namelen;
 	int bpa = 1, dummy = 1;
+	UINT64 pre;
 	WAVELET *wt_ptr;
 	while ( 1 ) {
 		std::cout << "input filename (absolute path): ";
@@ -39,7 +40,7 @@ int main ()
 		std::cout << "mem_used: :" << wt_ptr->mem_used << " " << 
 			(double)wt_ptr->mem_used/(1LL<<30) << "G\n";
 		std::cout << "ratio: " << (double)wt_ptr->mem_used/file_size << "\n"; 
-		
+		pre = wt_ptr->mem_used;
 		wt_ptr->support_rank();
 		
 		std::cout << "\nafter support_rank():\n";
@@ -47,6 +48,7 @@ int main ()
 			(double)wt_ptr->mem_used/(1LL<<30) << "G\n";
 		std::cout << "ratio: " << (double)wt_ptr->mem_used/file_size << "\n"; 
 
+		std::cout << "\nafter rank: " << (double)wt_ptr->mem_used/pre << "\n"; 
 		delete wt_ptr;
 	}
 	return (0);

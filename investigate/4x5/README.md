@@ -401,11 +401,15 @@ Compression rate:
 ## Experiment Results - 45-50 bit
 
 ```
+eopXD@white:/tmp2/b04705001/SuccinctDS/investigate/src$ ./test.try_compress
+input filename (absolute path): /tmp2/b04705001/4x5/decompressed/concat_all.decode0
+
+
 file: /tmp2/b04705001/4x5/decompressed/concat_all.decode0
 filesize: 942833664 0.878082G
 [wt] stream mode
 [wt_huff] stream mode constructor activated
-get_freq: 1.64807 seconds
+get_freq: 1.70342 seconds
 [huff_wt] empirical frequency
 	00000000:920009714
 	00000010:3212196
@@ -416,7 +420,7 @@ get_freq: 1.64807 seconds
 	00000100:2752125
 	00000011:1793579
 [huff_wt] node merge...
-construct_tree: 6.1e-05 seconds
+construct_tree: 0.126502 seconds
 [wt_huff] Huffman code generated
 	00000000: 0
 	00000001: 1110
@@ -428,23 +432,25 @@ construct_tree: 6.1e-05 seconds
 	00000111: 1000
 
 **************************************************
-gen_code: 0.000103 seconds
-fill_data: 3.52466 seconds
-total: 5.17296 seconds
+gen_code: 0.000123 seconds
+fill_data: 5.19761 seconds
+total: 7.02775 seconds
 
 
 wavelet tree:
-mem_used: :1007325019 0.938145G
-ratio: 1.0684
+mem_used: :126864583 0.118152G
+ratio: 0.134557
 
 after support_rank():
 mem_used: :147888099 0.137732G
 ratio: 0.156855
+
+after rank: 1.16572
 ```
 
-the compression ratio turned out better, I need to do some math to figure this out.
+Now the amount of overhead is correct to the theoretical calcualtions.
 
-## ## Experiment Results - 45-52 bit
+## Experiment Results - 45-52 bit
 
 ```
 file: /tmp2/b04705001/4x5/decompressed/concat_all.decode1
@@ -493,4 +499,4 @@ mem_used: :198844522 0.185188G
 ratio: 0.210901
 ```
 
-the compression ratio turned out better, I need to do some math to figure this out.
+Now the amount of overhead is correct to the theoretical calcualtions.
