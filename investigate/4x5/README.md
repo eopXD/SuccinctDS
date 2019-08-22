@@ -401,16 +401,12 @@ Compression rate:
 ## Experiment Results - 45-50 bit
 
 ```
-eopXD@white:/tmp2/b04705001/SuccinctDS/investigate/src$ ./test.try_compress
-input filename (absolute path): /tmp2/b04705001/4x5/decompressed/concat_all.decode0
-
-
 file: /tmp2/b04705001/4x5/decompressed/concat_all.decode0
-filesize: 942833664 0.878082G
+filesize: 942833664 899.156MB
 [wt] stream mode
 [wt_huff] stream mode constructor activated
-get_freq: 1.70342 seconds
-[huff_wt] empirical frequency
+get_freq: 1.65197 seconds
+[wt_huff] empirical frequency
 	00000000:920009714
 	00000010:3212196
 	00000001:2520838
@@ -419,8 +415,13 @@ get_freq: 1.70342 seconds
 	00000101:3382956
 	00000100:2752125
 	00000011:1793579
-[huff_wt] node merge...
-construct_tree: 0.126502 seconds
+H0 entropy: 0.23081
+Expected  bit length: 2.17615e+08
+Bits created: 1006274582
+Bits per character: 1.06729
+Redundant bit: 0.836478
+
+construct_tree: 0.098772 seconds
 [wt_huff] Huffman code generated
 	00000000: 0
 	00000001: 1110
@@ -432,23 +433,24 @@ construct_tree: 0.126502 seconds
 	00000111: 1000
 
 **************************************************
-gen_code: 0.000123 seconds
-fill_data: 5.19761 seconds
-total: 7.02775 seconds
+gen_code: 6.3e-05 seconds
+fill_data: 4.97691 seconds
+total: 6.72777 seconds
 
 
 wavelet tree:
-mem_used: :126864583 0.118152G
+mem_used: :126864583 120.987MB
 ratio: 0.134557
 
 after support_rank():
-mem_used: :147888099 0.137732G
+mem_used: :147888099 141.037MB
 ratio: 0.156855
-
-after rank: 1.16572
 ```
 
-Now the amount of overhead is correct to the theoretical calcualtions.
+Also, we are only taking 6 bits right here and we can calculate for the "real" compression rate: 
+
+- before: $126864583 / (942 833 664 \cdot \frac{3}{4}) = 17.94\% $
+- after: $147888099 / (942 833 664 \cdot \frac{3}{4}) = 20.914\% $
 
 ## Experiment Results - 45-52 bit
 
@@ -457,11 +459,11 @@ input filename (absolute path): /tmp2/b04705001/4x5/decompressed/concat_all.deco
 
 
 file: /tmp2/b04705001/4x5/decompressed/concat_all.decode1
-filesize: 942833664 0.878082G
+filesize: 942833664 899.156MB
 [wt] stream mode
 [wt_huff] stream mode constructor activated
-get_freq: 2.36262 seconds
-[huff_wt] empirical frequency
+get_freq: 1.67331 seconds
+[wt_huff] empirical frequency
 	00000010:615189527
 	00000000:299259214
 	00001001:3212196
@@ -472,8 +474,13 @@ get_freq: 2.36262 seconds
 	00010101:3382956
 	00010001:2752125
 	00001101:1793579
-[huff_wt] node merge...
-construct_tree: 0.170734 seconds
+H0 entropy: 1.1674
+Expected  bit length: 1.10067e+09
+Bits created: 1354386014
+Bits per character: 1.43651
+Redundant bit: 0.269103
+
+construct_tree: 0.13797 seconds
 [wt_huff] Huffman code generated
 	00000000: 10
 	00000001: 1111
@@ -487,20 +494,24 @@ construct_tree: 0.170734 seconds
 	00011101: 11010
 
 **************************************************
-gen_code: 8.4e-05 seconds
-fill_data: 7.29609 seconds
-total: 9.82961 seconds
+gen_code: 6.8e-05 seconds
+fill_data: 7.1701 seconds
+total: 8.9815 seconds
 
 
 wavelet tree:
-mem_used: :170387519 0.158686G
+mem_used: :170387519 162.494MB
 ratio: 0.180719
 
 after support_rank():
-mem_used: :198680337 0.185035G
+mem_used: :198680337 189.476MB
 ratio: 0.210727
 
 after rank: 1.16605
 ```
 
-Now the amount of overhead is correct to the theoretical calcualtions.
+It turns out that the "real" compression rate is close. I will investigate on other board sizes to find out if there is any correlation.
+
+## Entropy vs. Huffman-code
+
+Entropy gives the lowerbound of the encoding. However Huffman encoding don't neccessary reaches the lowerbound because the discreteness of bits. You have to express things with at least 1 bit. Huffman-code shows no redundancy when all probabilities are negative powers of 2, which is not the case right here. Though this is still optimal coding, there are still redundant bits in Huffman-code. 

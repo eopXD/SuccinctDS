@@ -32,20 +32,21 @@ int main ()
 		namelen = strlen(filename);
 		UINT64 file_size = get_filesize(filename);
 		std::cout << "\n\nfile: " << filename << "\n";
-		std::cout << "filesize: " << file_size << " " << (double)file_size/(1LL<<30) << "G\n";
+		std::cout << "filesize: " << file_size << " " << 
+			(double)file_size/(1LL<<20) << "MB\n";
 	
 		wt_ptr = new WAVELET(filename, namelen, bpa, dummy);
 		
 		std::cout << "\n\nwavelet tree:\n";
 		std::cout << "mem_used: :" << wt_ptr->mem_used << " " << 
-			(double)wt_ptr->mem_used/(1LL<<30) << "G\n";
+			(double)wt_ptr->mem_used/(1LL<<20) << "MB\n";
 		std::cout << "ratio: " << (double)wt_ptr->mem_used/file_size << "\n"; 
 		pre = wt_ptr->mem_used;
 		wt_ptr->support_rank();
 		
 		std::cout << "\nafter support_rank():\n";
 		std::cout << "mem_used: :" << wt_ptr->mem_used << " " << 
-			(double)wt_ptr->mem_used/(1LL<<30) << "G\n";
+			(double)wt_ptr->mem_used/(1LL<<20) << "MB\n";
 		std::cout << "ratio: " << (double)wt_ptr->mem_used/file_size << "\n"; 
 
 		std::cout << "\nafter rank: " << (double)wt_ptr->mem_used/pre << "\n"; 

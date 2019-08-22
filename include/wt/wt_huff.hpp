@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstdio>
+#include <cmath>
 #include <stdint.h>
 #include <ctime>
 // C++
@@ -115,7 +116,9 @@ struct wt_huff {
 
 		mem_used += sizeof(VII)+(sizeof(PII)*freq.size());
 		//std::cout << "vector<PII> freq: " << sizeof(VII)+(sizeof(PII)*freq.size()) << "\n";
-		std::cout << "[huff_wt] empirical frequency\n";
+		std::cout << "[wt_huff] empirical frequency\n";
+		double H0 = 0;
+		INT total = 0;
 		for ( INT i=0; i<freq.size(); ++i ) {
 			std::cout << "\t";
 			decimal_to_binary(bpa*8, freq[i].second);
@@ -123,13 +126,21 @@ struct wt_huff {
 			NODE *a = new NODE(freq[i].second, bpa, freq[i].first);
 			//std::cout << "leaf node: " << a->mem_used << "\n";	
 			mem_used += a->mem_used; // memory of node, leaf node no  bitvec
-			
 			vec.push_back(a);
+
+			total += freq[i].first;
 		}
+		for ( INT i=0; i<freq.size(); ++i ) {
+			double p = (double)freq[i].first/total;
+			H0 -= p * log2(p);
+		}
+		std::cout << "H0 entropy: " << H0 << "\n";
+		std::cout << "Expected  bit length: " << H0*total << "\n";
+
 		mem_used += sizeof(VNODE)+(sizeof(NODE*)*vec.size());
 		//std::cout << "vector<NODE*> vec: " << sizeof(VNODE)+(sizeof(NODE*)*vec.size()) << "\n";
 
-		std::cout << "[huff_wt] node merge...\n";
+		INT bits = 0;
 		while ( vec.size() > 1 ) {
 			std::sort(vec.begin(), vec.end(), cmp);
 			//for ( typename VNODE::iterator it=vec.begin();
@@ -138,7 +149,7 @@ struct wt_huff {
 			NODE *a = vec[vec.size()-2], *b = vec[vec.size()-1];
 			vec.pop_back(); vec.pop_back();
 			NODE *c = new NODE(a, b);
-			
+			bits += c->len;	
 			//std::cout << "internal node: " << c->mem_used << "\n";
 			mem_used += c->mem_used; // memory of node, including bitvec
 
@@ -147,6 +158,11 @@ struct wt_huff {
 		}
 		root = vec[0]; // root is the last remaining node
 		//root->display_bitmap();
+
+		std::cout << "Bits created: " << bits << "\n";
+		std::cout << "Bits per character: " << (double)bits/total << "\n";
+		
+		std::cout << "Redundant bit: " << (double)bits/total - H0 << "\n\n";
 	}
 
 	void dfs ( NODE *now, bool *code, int len ) {
